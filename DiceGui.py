@@ -7,8 +7,9 @@ import time
 import pyautogui
 import random as rd
 import os
+from Auto.ImageController import ImageController
 
-class App():
+class App(ImageController):
 
     def __init__(self, g_x, g_y, g_w, g_h, diceLookBox, diceBox, diceBoxCenter):
         self.root = tk.Tk()
@@ -86,7 +87,7 @@ class App():
         img = ImageOps.grayscale(img)
         return np.array(Image.Image.getcolors(img)).sum()
 
-    def diceMove(self, x, y, goal_x, goal_y):   # 수정 필요
+    def diceMove(self, x, y, goal_x, goal_y):
         rd_val = int(rd.random() * 10) - int(rd.random() * 10)
         rd_val2 = int(rd.random() * 10) - int(rd.random() * 10)
         pyautogui.moveTo(x=x, y=y)
@@ -130,14 +131,3 @@ class App():
     def compareImportantDice(self, num, tmp):
         if abs(self.diceBoxPixel[num][0] - tmp[0]) < 3000 and abs(self.diceBoxPixel[num][1] - tmp[1]) < 3000 and abs(self.diceBoxPixel[num][2] - tmp[2]) < 3000:
             return True
-
-    def imagePath(self, imageName):   # 이미지 경로 불러오기
-        return os.path.dirname(os.path.realpath(__file__)) + '/Image/' + imageName + '.PNG'
-
-    def imageRecognize(self, imagePath):  # 이미지 클릭하기
-        location = pyautogui.locateCenterOnScreen(imagePath, confidence = .9)
-        try:
-            x, y = location
-            return 1
-        except:
-            return 0

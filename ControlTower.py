@@ -6,8 +6,9 @@ import cv2
 import numpy as np
 import threading
 from Auto.DiceGui import App
+from Auto.ImageController import ImageController
 
-class ControlTower():
+class ControlTower(ImageController):
 
     def __init__(self):
         # config
@@ -21,58 +22,25 @@ class ControlTower():
         except:
             print('not found red house')
 
-    def imageRecognize(self, imagePath):  # 이미지 클릭하기
-        location = pyautogui.locateCenterOnScreen(imagePath, confidence = self.conf)
-        try:
-            x, y = location
-            return 1
-        except:
-            #print('not found Image(recognize)')
-            return 0
-
-    def imageClick(self, imagePath):  # 이미지 클릭하기
-        location = pyautogui.locateCenterOnScreen(imagePath, confidence = self.conf)
-        try:
-            x, y = location
-            pyautogui.click(x, y, clicks=1)
-            return 1
-        except:
-            #print('not found Image(imageClick)')
-            return 0
-
-    def imageClickRepeat(self, imagePath):  # 이미지 클릭하기(반복)
-        location = pyautogui.locateCenterOnScreen(imagePath, confidence = self.conf)
-        try:
-            x, y = location
-            pyautogui.click(x, y, clicks=1)
-        except:
-            #print('not found Image(imageClickRepeat)')
-            time.sleep(1)
-            self.imageClickRepeat(imagePath)
-
-    def imagePath(self, imageName):   # 이미지 경로 불러오기
-        return os.path.dirname(os.path.realpath(__file__)) + '/Image/' + imageName + '.PNG'
-
-    def imageLocation(self, imageName):   # 이미지 위치 불러오기
-        left, top, width, height = pyautogui.locateOnScreen(self.imagePath(imageName), confidence = self.conf)
-        return left, top, width, height
-
     def adAction(self): # 광고 보기
         print('광고 보기')
         self.imageClickRepeat(self.imagePath('ad2'))
-        if controlTower.imageRecognize(controlTower.imagePath('ad wait')):
-            controlTower.imageClick(controlTower.imagePath('ad ok'))
+        if self.imageRecognize(self.imagePath('ad wait')):
+            self.imageClick(self.imagePath('ad ok'))
         else:
             pass
         time.sleep(50)
         pyautogui.press('esc')
-        if not controlTower.imageRecognize(controlTower.imagePath('start')):
-            x, y, w, h = pyautogui.locateOnScreen(controlTower.imagePath('ad_err1'))
+        time.sleep(2.5)
+        if not self.imageRecognize(self.imagePath('start')):
+            x, y, w, h = pyautogui.locateOnScreen(self.imagePath('ad_err1'))
             pyautogui.click(x + w, y)
-            controlTower.imageClickRepeat(controlTower.imagePath('ad_err2'))
-            controlTower.sendKatalkReConnect()
+            self.imageClickRepeat(self.imagePath('ad_err2'))
+            self.sendKatalk('I reconnected random dice')
         while True:
-            if controlTower.imageRecognize(controlTower.imagePath('start')):
+            if self.imageRecognize(self.imagePath('start')):
+                break
+            if self.imageRecognize(self.imagePath('ad2')):
                 break
             else:
                 time.sleep(1)
@@ -122,22 +90,12 @@ class ControlTower():
         img = ImageOps.grayscale(img)
         return np.array(Image.Image.getcolors(img)).sum()
 
-    def sendKatalk(self, playCount):
+    def sendKatalk(self, msg):
         try:
-            self.imageClick(controlTower.imagePath('katalk chat'))
-            pyautogui.write('I repeated it '+str(playCount)+' times.',interval=.1)
-            self.imageClick(controlTower.imagePath('katalk send'))
+            self.imageClick(self.imagePath('katalk chat'))
+            pyautogui.write(msg, interval=.1)
+            self.imageClick(self.imagePath('katalk send'))
         except:
-            #print('not found Image(sendKatalk)')
-            pass
-
-    def sendKatalkReConnect(self):
-        try:
-            self.imageClick(controlTower.imagePath('katalk chat'))
-            pyautogui.write('I reconnected random dice',interval=.1)
-            self.imageClick(controlTower.imagePath('katalk send'))
-        except:
-            #print('not found Image(sendKatalk)')
             pass
 
     def execute(self):# GUI(스레드)
@@ -197,7 +155,7 @@ if __name__ == '__main__':
             if controlTower.imageClick(controlTower.imagePath('end ok')):
                 playCount += 1
                 print('게임 끝')
-                controlTower.sendKatalk(playCount)
+                controlTower.sendKatalk('I repeated it '+str(playCount)+' times.')
                 time.sleep(5)
                 break
 
