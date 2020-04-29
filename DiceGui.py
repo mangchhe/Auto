@@ -7,12 +7,44 @@ import time
 import pyautogui
 import random as rd
 import os
-from Auto.ImageController import ImageController
+from ImageController import ImageController
 
 class App(ImageController):
 
     def __init__(self, g_x, g_y, g_w, g_h, diceLookBox, diceBox, diceBoxCenter):
         self.root = tk.Tk()
+        # GUI
+        '''
+        self.root.title('다이스 GUI')
+        self.root.geometry('240x600+1000+0')
+        self.root.resizable(width=True, height=False)
+        self.img = []
+        self.labelImg = ['img'+str(i) for i in range(1,16)]
+        self.labelText = ['text'+str(i) for i in range(1,16)]
+        self.labelSimilarText = ['text' + str(i) for i in range(1, 16)]
+        self.labelColor = ['white','black','red','blue','green','purple','yellow','pink']
+
+        for i in range(3):
+            for j in range(5):
+                self.img.append(PhotoImage(file='Image/case/' + str(i * 5 + j + 1) + '.PNG'))
+
+        label = Label(self.root, text='Image', font=('맑은 고딕', 14, 'bold'), fg='white', bg="magenta")
+        label.grid(row=0, columnspan=5)
+        label = Label(self.root, text='RGB', font=('맑은 고딕', 14, 'bold'), fg='white', bg="magenta")
+        label.grid(row=4, columnspan=5)
+        label = Label(self.root, text='similar', font=('맑은 고딕', 14, 'bold'), fg='white', bg="magenta")
+        label.grid(row=8, columnspan=5)
+
+        for i in range(3):
+            for j in range(5):
+                self.labelImg[i * 5 + j] = Label(self.root, image=self.img[i * 5 + j])
+                self.labelImg[i * 5 + j].grid(row=i+1, column=j)
+                self.labelText[i * 5 + j] = Label(self.root, text=str(i * 5 + j))
+                self.labelText[i * 5 + j].grid(row=i+5, column=j)
+                self.labelSimilarText[i * 5 + j] = Label(self.root, text=str(i * 5 + j))
+                self.labelSimilarText[i * 5 + j].grid(row=i+9, column=j)
+        '''
+        # Combine
         self.similarBox = []
         self.g_x = g_x
         self.g_y = g_y
@@ -28,8 +60,8 @@ class App(ImageController):
 
     def updateDisplay(self):
 
-        if self.isComb() < 0 and self.imageRecognize(self.imagePath('create dice')):  # 광고에서 0 이하인게 나오기 때문에 방지하기 위해서 이미지 식별도 추가
-            time.sleep(1)
+        if self.isComb() < 0 and self.isComb2() < 0 and self.imageRecognize(self.imagePath('create dice')):  # 광고에서 0 이하인게 나오기 때문에 방지하기 위해서 이미지 식별도 추가
+            time.sleep(.3)
             del self.diceBoxPixel[:]
             self.seperateDiceImage()
             self.getSumPixel()
@@ -51,6 +83,7 @@ class App(ImageController):
                     R += img[m][n][0]
                     G += img[m][n][1]
                     B += img[m][n][2]
+            #print(i, R,G,B)
             self.diceBoxPixel.append((R - 197100,G - 197100,B - 197100))
 
 
@@ -79,13 +112,13 @@ class App(ImageController):
     def isComb(self):
         img = ImageGrab.grab(bbox=(self.g_x + self.g_w - 20, self.g_y + self.g_h + 400, self.g_x + self.g_w + 20, self.g_y + self.g_h + 650))
         img = ImageOps.grayscale(img)
-        return np.array(Image.Image.getcolors(img)).sum() - 22850
+        return np.array(Image.Image.getcolors(img)).sum() - 32000 # 22850
 
     def isComb2(self):
         img = ImageGrab.grab(
-            bbox=(self.g_x + self.g_w - 20, self.g_y + self.g_h + 335, self.g_x + self.g_w + 380, self.g_y + self.g_h + 360))
+            bbox=(self.g_x + self.g_w - 20, self.g_y + self.g_h + 365, self.g_x + self.g_w + 400, self.g_y + self.g_h + 375))
         img = ImageOps.grayscale(img)
-        return np.array(Image.Image.getcolors(img)).sum()
+        return np.array(Image.Image.getcolors(img)).sum() - 10000
 
     def diceMove(self, x, y, goal_x, goal_y):
         rd_val = int(rd.random() * 10) - int(rd.random() * 10)
@@ -96,7 +129,6 @@ class App(ImageController):
     def combiDice(self):
         for i in range(14):
             if self.isComb() > 0:
-                print('조합 중지')
                 break
             if self.similarBox[i] != 0 and self.isCombDice(i):
                 try:
@@ -104,6 +136,7 @@ class App(ImageController):
                 except:
                     self.similarBox[i] = 0
                     break
+                #print('{}번째 픽셀 {} {}번째 픽셀 {}'.format(i,self.diceBoxPixel[i],j,self.diceBoxPixel[j]))
                 x, y = self.diceBoxCenter[i]
                 goal_x, goal_y = self.diceBoxCenter[j]
                 self.diceMove(x + self.g_x + 89, y + self.g_y + 444, goal_x + self.g_x + 89, goal_y + self.g_y + 444)

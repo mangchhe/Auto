@@ -5,8 +5,9 @@ import time
 import cv2
 import numpy as np
 import threading
-from Auto.DiceGui import App
-from Auto.ImageController import ImageController
+from DiceGui import App
+from ImageController import ImageController
+import KaMe
 
 class ControlTower(ImageController):
 
@@ -47,6 +48,20 @@ class ControlTower(ImageController):
 
         print('광고 끝')
 
+    def adAction2(self):
+        print('광고 보기')
+        while True:
+            if self.imageRecognize(self.imagePath('ad_dia')):
+                self.imageClickRepeat(self.imagePath('ad_dia'))
+                self.imageClickRepeat(self.imagePath('ad_dia2'))
+                time.sleep(3)
+                break
+            else:
+                if controlTower.imageRecognize(controlTower.imagePath('start')):
+                    time.sleep(3)
+                    break
+        print('광고 끝')
+
     def diceUpgrade(self, num): # 다이스 업그레이드
         pyautogui.click(self.g_x + 32 + (68 * num), self.g_y + 754 + 33, clicks=1)
 
@@ -82,13 +97,13 @@ class ControlTower(ImageController):
     def isComb(self):
         img = ImageGrab.grab(bbox=(self.g_x + self.g_w - 20, self.g_y + self.g_h + 400, self.g_x + self.g_w + 20, self.g_y + self.g_h + 650))
         img = ImageOps.grayscale(img)
-        return np.array(Image.Image.getcolors(img)).sum() - 22850
+        return np.array(Image.Image.getcolors(img)).sum() - 32000 #22850
 
     def isComb2(self):
         img = ImageGrab.grab(
-            bbox=(self.g_x + self.g_w - 20, self.g_y + self.g_h + 335, self.g_x + self.g_w + 380, self.g_y + self.g_h + 360))
+            bbox=(self.g_x + self.g_w - 20, self.g_y + self.g_h + 365, self.g_x + self.g_w + 400, self.g_y + self.g_h + 375))
         img = ImageOps.grayscale(img)
-        return np.array(Image.Image.getcolors(img)).sum()
+        return np.array(Image.Image.getcolors(img)).sum() - 10000
 
     def sendKatalk(self, msg):
         try:
@@ -115,17 +130,25 @@ if __name__ == '__main__':
 
         print('실행 횟수 :',playCount)
 
+        if playCount % 5 == 0:
+
+            KaMe.send_message(str(playCount))
+
         print('매크로 시작')
         #-------------------------------------
         while True:
-            if controlTower.imageClick(controlTower.imagePath('start')):
+            if controlTower.imageRecognize(controlTower.imagePath('start')):
+                controlTower.imageClickRepeat(controlTower.imagePath('start'))
                 break
             else:
-                controlTower.adAction()
+                controlTower.adAction2()
 
         print('퀵 매치 시작')
         # -------------------------------------
-        controlTower.imageClickRepeat(controlTower.imagePath('quick match'))
+        while True:
+            if controlTower.imageRecognize(controlTower.imagePath('quick match')):
+                controlTower.imageClickRepeat(controlTower.imagePath('quick match'))
+                break
 
         print('다이스 판 설정')
         # -------------------------------------
@@ -155,12 +178,19 @@ if __name__ == '__main__':
             if controlTower.imageClick(controlTower.imagePath('end ok')):
                 playCount += 1
                 print('게임 끝')
-                controlTower.sendKatalk('I repeated it '+str(playCount)+' times.')
-                time.sleep(5)
+                time.sleep(7)
+                break
+            if controlTower.imageRecognize(controlTower.imagePath('fight')) and controlTower.imageRecognize(controlTower.imagePath('fight2')):  # err
+                controlTower.imageClick(controlTower.imagePath('fight'))
+                playCount += 1
+                print('게임 끝')
+                time.sleep(2)
                 break
 
-            if controlTower.isComb() > 0:
+            if (controlTower.isComb() > 0 or controlTower.isComb2() > 0) and controlTower.imageRecognize(controlTower.imagePath('create dice')):
                 controlTower.diceUpgrade(1)
-                controlTower.imageClick(controlTower.imagePath('create dice'))
+                if controlTower.imageRecognize(controlTower.imagePath('create dice')):
+                    controlTower.imageClick(controlTower.imagePath('create dice'))
+                time.sleep(.3)
             else:
-                time.sleep(7)
+                time.sleep(3)
