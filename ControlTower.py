@@ -1,13 +1,12 @@
 from PIL import ImageGrab, Image, ImageOps
 import pyautogui
-import os
 import time
 import cv2
 import numpy as np
 import threading
 from DiceGui import App
 from ImageController import ImageController
-import KaMe
+from CombineFlag import CombineFlag
 
 class ControlTower(ImageController):
 
@@ -20,6 +19,7 @@ class ControlTower(ImageController):
             self.diceBox = (self.g_x + 89, self.g_y + 444, self.g_x + 353, self.g_y + 600)
             self.diceLookBox = []
             self.diceBoxCenter = []
+            self.combineFlag = CombineFlag()
         except:
             print('not found red house')
 
@@ -32,18 +32,19 @@ class ControlTower(ImageController):
             pass
         time.sleep(50)
         pyautogui.press('esc')
-        time.sleep(2.5)
+        time.sleep(3)
         if not self.imageRecognize(self.imagePath('start')):
-            x, y, w, h = pyautogui.locateOnScreen(self.imagePath('ad_err1'))
-            pyautogui.click(x + w, y)
-            self.imageClickRepeat(self.imagePath('ad_err2'))
-            self.sendKatalk('I reconnected random dice')
+            self.reconnect()
+        breakCount = 0
         while True:
+            if breakCount == 20:
+                break
             if self.imageRecognize(self.imagePath('start')):
                 break
             if self.imageRecognize(self.imagePath('ad2')):
                 break
             else:
+                breakCount += 1
                 time.sleep(1)
 
         print('광고 끝')
@@ -61,6 +62,12 @@ class ControlTower(ImageController):
                     time.sleep(3)
                     break
         print('광고 끝')
+
+    def reconnect(self):
+        x, y, w, h = pyautogui.locateOnScreen(self.imagePath('ad_err1'))
+        pyautogui.click(x + w, y)
+        self.imageClickRepeat(self.imagePath('ad_err2'))
+        self.sendKatalk('I reconnected random dice')
 
     def diceUpgrade(self, num): # 다이스 업그레이드
         pyautogui.click(self.g_x + 32 + (68 * num), self.g_y + 754 + 33, clicks=1)
@@ -97,13 +104,13 @@ class ControlTower(ImageController):
     def isComb(self):
         img = ImageGrab.grab(bbox=(self.g_x + self.g_w - 20, self.g_y + self.g_h + 400, self.g_x + self.g_w + 20, self.g_y + self.g_h + 650))
         img = ImageOps.grayscale(img)
-        return np.array(Image.Image.getcolors(img)).sum() - 32000 #22850
+        return np.array(Image.Image.getcolors(img)).sum() - 37000 # 32000
 
     def isComb2(self):
         img = ImageGrab.grab(
             bbox=(self.g_x + self.g_w - 20, self.g_y + self.g_h + 365, self.g_x + self.g_w + 400, self.g_y + self.g_h + 375))
         img = ImageOps.grayscale(img)
-        return np.array(Image.Image.getcolors(img)).sum() - 10000
+        return np.array(Image.Image.getcolors(img)).sum() - 15000 # 10000
 
     def sendKatalk(self, msg):
         try:
@@ -114,7 +121,35 @@ class ControlTower(ImageController):
             pass
 
     def execute(self):# GUI(스레드)
-        self.app = App(self.g_x, self.g_y, self.g_w, self.g_h, self.diceLookBox, self.diceBox, self.diceBoxCenter)
+        self.app = App(self.g_x, self.g_y, self.g_w, self.g_h, self.diceLookBox, self.diceBox, self.diceBoxCenter, self.combineFlag)
+
+    def getFlag(self):
+
+        return self.combineFlag.getFlag()
+
+    def setFlag(self, judge):
+
+        self.combineFlag.setFlag(judge)
+
+    def sendimti(self):
+
+        while True:
+
+            if controlTower.imageRecognize(controlTower.imagePath('imti')):
+                controlTower.imageClickRepeat(controlTower.imagePath('imti'))
+                break
+
+            time.sleep(.1)
+
+        while True:
+
+            if controlTower.imageRecognize(controlTower.imagePath('imti2')):
+                controlTower.imageClickRepeat(controlTower.imagePath('imti2'))
+                break
+
+            time.sleep(.1)
+
+
 
 if __name__ == '__main__':
 
@@ -126,22 +161,21 @@ if __name__ == '__main__':
 
         controlTower = ControlTower()
 
+        flag = False
+
         t = threading.Thread(target=controlTower.execute)
 
         print('실행 횟수 :',playCount)
 
-        if playCount % 5 == 0:
-
-            KaMe.send_message(str(playCount))
-
         print('매크로 시작')
         #-------------------------------------
         while True:
+            time.sleep(2)
             if controlTower.imageRecognize(controlTower.imagePath('start')):
                 controlTower.imageClickRepeat(controlTower.imagePath('start'))
                 break
             else:
-                controlTower.adAction2()
+                controlTower.adAction()
 
         print('퀵 매치 시작')
         # -------------------------------------
@@ -160,19 +194,27 @@ if __name__ == '__main__':
                     countTmp += 1
                     break
                 else:
-                    print('not found Image')
                     time.sleep(1)
         else:
+            breakCount = 0
             while True:
+                if breakCount == 15:
+                    flag = True
+                    break
                 if pyautogui.locateCenterOnScreen(controlTower.imagePath('create dice'), confidence=controlTower.conf) != None:
                     break
                 else:
+                    breakCount += 1
                     time.sleep(1)
+        if flag:
+            continue
 
         print('게임 진행...')
         # -------------------------------------
         x, y = pyautogui.locateCenterOnScreen(controlTower.imagePath('create dice'), confidence = .9)
         pyautogui.click(x,y,clicks=10,interval=.1)
+
+        controlTower.sendimti()
 
         while True:
             if controlTower.imageClick(controlTower.imagePath('end ok')):
@@ -187,7 +229,7 @@ if __name__ == '__main__':
                 time.sleep(2)
                 break
 
-            if (controlTower.isComb() > 0 or controlTower.isComb2() > 0) and controlTower.imageRecognize(controlTower.imagePath('create dice')):
+            if (controlTower.isComb() > 0 or controlTower.isComb2() > 0) and controlTower.imageRecognize(controlTower.imagePath('create dice')) and controlTower.getFlag():
                 controlTower.diceUpgrade(1)
                 if controlTower.imageRecognize(controlTower.imagePath('create dice')):
                     controlTower.imageClick(controlTower.imagePath('create dice'))

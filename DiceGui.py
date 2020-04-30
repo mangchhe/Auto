@@ -11,39 +11,10 @@ from ImageController import ImageController
 
 class App(ImageController):
 
-    def __init__(self, g_x, g_y, g_w, g_h, diceLookBox, diceBox, diceBoxCenter):
+    def __init__(self, g_x, g_y, g_w, g_h, diceLookBox, diceBox, diceBoxCenter, combineFlag):
         self.root = tk.Tk()
         # GUI
-        '''
-        self.root.title('다이스 GUI')
-        self.root.geometry('240x600+1000+0')
-        self.root.resizable(width=True, height=False)
-        self.img = []
-        self.labelImg = ['img'+str(i) for i in range(1,16)]
-        self.labelText = ['text'+str(i) for i in range(1,16)]
-        self.labelSimilarText = ['text' + str(i) for i in range(1, 16)]
-        self.labelColor = ['white','black','red','blue','green','purple','yellow','pink']
 
-        for i in range(3):
-            for j in range(5):
-                self.img.append(PhotoImage(file='Image/case/' + str(i * 5 + j + 1) + '.PNG'))
-
-        label = Label(self.root, text='Image', font=('맑은 고딕', 14, 'bold'), fg='white', bg="magenta")
-        label.grid(row=0, columnspan=5)
-        label = Label(self.root, text='RGB', font=('맑은 고딕', 14, 'bold'), fg='white', bg="magenta")
-        label.grid(row=4, columnspan=5)
-        label = Label(self.root, text='similar', font=('맑은 고딕', 14, 'bold'), fg='white', bg="magenta")
-        label.grid(row=8, columnspan=5)
-
-        for i in range(3):
-            for j in range(5):
-                self.labelImg[i * 5 + j] = Label(self.root, image=self.img[i * 5 + j])
-                self.labelImg[i * 5 + j].grid(row=i+1, column=j)
-                self.labelText[i * 5 + j] = Label(self.root, text=str(i * 5 + j))
-                self.labelText[i * 5 + j].grid(row=i+5, column=j)
-                self.labelSimilarText[i * 5 + j] = Label(self.root, text=str(i * 5 + j))
-                self.labelSimilarText[i * 5 + j].grid(row=i+9, column=j)
-        '''
         # Combine
         self.similarBox = []
         self.g_x = g_x
@@ -53,7 +24,10 @@ class App(ImageController):
         self.diceLookBox = diceLookBox
         self.diceBox = diceBox
         self.diceBoxCenter = diceBoxCenter
+        self.combineFlag = combineFlag
         self.diceBoxPixel = []
+        self.diceNoCombineList = []
+        self.noConbineAction()
 
         self.updateDisplay()
         self.root.mainloop()
@@ -68,8 +42,30 @@ class App(ImageController):
             self.pixelSimilarity()
             self.combiDice()
 
-        self.root.after(500, self.updateDisplay)
+        self.root.after(100, self.updateDisplay)
 
+    def noConbineAction(self):
+        # self.diceNoCombineList.append([65883, 67295, 39611]) # hurricain_1
+        # self.diceNoCombineList.append([64546, 66114, 33308]) # hurricain 2
+        self.diceNoCombineList.append([63124, 64689, 25583])  # hurricain 3
+        self.diceNoCombineList.append([61813, 63403, 18602])  # hurricain 4
+        self.diceNoCombineList.append([60374, 61975, 10845])  # hurricain 5
+        self.diceNoCombineList.append([59088, 60685, 3848])  # hurricain 6
+        # self.diceNoCombineList.append([])  # hurricain 7
+        # self.diceNoCombineList.append([])   # after_hurricain 1
+        # self.diceNoCombineList.append([63675, 49283, 26868])   # after_hurricain 2
+        self.diceNoCombineList.append([61532, 39836, 14858])  # after_hurricain 3
+        self.diceNoCombineList.append([60335, 33835, 5756])  # after_hurricain 4
+        self.diceNoCombineList.append([58557, 25668, -5388])  # after_hurricain 5
+        self.diceNoCombineList.append([56989, 18333, -15384])  # after_hurricain 6
+        # self.diceNoCombineList.append([])  # after_hurricain 7
+        self.diceNoCombineList.append([57639, 42998, 30859]) # grow1
+        self.diceNoCombineList.append([52060, 35183, 23461]) # grow2
+        self.diceNoCombineList.append([45686, 25523, 14363]) # grow3
+        self.diceNoCombineList.append([40211, 17501, 6789]) # grow4
+        self.diceNoCombineList.append([33467, 7174, -2898]) # grow5
+        self.diceNoCombineList.append([29427, 3427, -6644]) # grow6
+        self.diceNoCombineList.append([49961, 36071, 23786]) # grow7
 
     def getSumPixel(self):  # 픽셀값 가져오기
         for i in range(1,16):
@@ -83,8 +79,8 @@ class App(ImageController):
                     R += img[m][n][0]
                     G += img[m][n][1]
                     B += img[m][n][2]
-            #print(i, R,G,B)
-            self.diceBoxPixel.append((R - 197100,G - 197100,B - 197100))
+
+            self.diceBoxPixel.append((R - 162000, G - 159300, B - 174600))
 
 
     def pixelSimilarity(self):
@@ -112,13 +108,13 @@ class App(ImageController):
     def isComb(self):
         img = ImageGrab.grab(bbox=(self.g_x + self.g_w - 20, self.g_y + self.g_h + 400, self.g_x + self.g_w + 20, self.g_y + self.g_h + 650))
         img = ImageOps.grayscale(img)
-        return np.array(Image.Image.getcolors(img)).sum() - 32000 # 22850
+        return np.array(Image.Image.getcolors(img)).sum() - 37000 # 32000 # 22850
 
     def isComb2(self):
         img = ImageGrab.grab(
             bbox=(self.g_x + self.g_w - 20, self.g_y + self.g_h + 365, self.g_x + self.g_w + 400, self.g_y + self.g_h + 375))
         img = ImageOps.grayscale(img)
-        return np.array(Image.Image.getcolors(img)).sum() - 10000
+        return np.array(Image.Image.getcolors(img)).sum() - 15000 # 10000
 
     def diceMove(self, x, y, goal_x, goal_y):
         rd_val = int(rd.random() * 10) - int(rd.random() * 10)
@@ -128,15 +124,15 @@ class App(ImageController):
     
     def combiDice(self):
         for i in range(14):
-            if self.isComb() > 0:
+            if self.imageRecognize(self.imagePath('end ok')):
                 break
+            self.combineFlag.setFlag(False)
             if self.similarBox[i] != 0 and self.isCombDice(i):
                 try:
                     j = self.similarBox.index(self.similarBox[i],i+1)
                 except:
                     self.similarBox[i] = 0
                     break
-                #print('{}번째 픽셀 {} {}번째 픽셀 {}'.format(i,self.diceBoxPixel[i],j,self.diceBoxPixel[j]))
                 x, y = self.diceBoxCenter[i]
                 goal_x, goal_y = self.diceBoxCenter[j]
                 self.diceMove(x + self.g_x + 89, y + self.g_y + 444, goal_x + self.g_x + 89, goal_y + self.g_y + 444)
@@ -145,22 +141,11 @@ class App(ImageController):
                 break
             elif sum(self.similarBox) == 0:
                 break
+        self.combineFlag.setFlag(True)
 
     def isCombDice(self, num):
-        hurricain_1 = (30802,29490,16798)
-        hurricain_2 = (29444,28351,10743)
-        hurricain_3 = (28084,26971,3324)
-        after_hurricain_1 = (29421,16000,13573)
-        after_hurricain_2 = (28513,11522,4330)
-        after_hurricain_3 = (26834,3725,-6313)
-        #ice_2 = (31140, 20740, 12336)
-        ice_3 = (30487, 14747, 2023)
 
-        if self.compareImportantDice(num, hurricain_1) or self.compareImportantDice(num, hurricain_2) or self.compareImportantDice(num, hurricain_3) or self.compareImportantDice(num, ice_3) or self.compareImportantDice(num, after_hurricain_1) or self.compareImportantDice(num, after_hurricain_2) or self.compareImportantDice(num, after_hurricain_3):
-            return False
-        else:
-            return True
-
-    def compareImportantDice(self, num, tmp):
-        if abs(self.diceBoxPixel[num][0] - tmp[0]) < 3000 and abs(self.diceBoxPixel[num][1] - tmp[1]) < 3000 and abs(self.diceBoxPixel[num][2] - tmp[2]) < 3000:
-            return True
+        for i in range(len(self.diceNoCombineList)):
+                if abs(self.diceBoxPixel[num][0] - self.diceNoCombineList[i][0]) < 3000 and abs(self.diceBoxPixel[num][1] - self.diceNoCombineList[i][1]) < 3000 and abs(self.diceBoxPixel[num][2] - self.diceNoCombineList[i][2]) < 3000:
+                    return False
+        return True
