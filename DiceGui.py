@@ -27,45 +27,72 @@ class App(ImageController):
         self.combineFlag = combineFlag
         self.diceBoxPixel = []
         self.diceNoCombineList = []
-        self.noConbineAction()
 
         self.updateDisplay()
         self.root.mainloop()
 
     def updateDisplay(self):
 
-        if self.isComb() < 0 and self.isComb2() < 0 and self.imageRecognize(self.imagePath('create dice')):  # 광고에서 0 이하인게 나오기 때문에 방지하기 위해서 이미지 식별도 추가
-            time.sleep(.3)
+        if self.isComb() < 0 and self.isComb2() < 0 and self.imageRecognize(self.imagePath('create dice')) and self.combineFlag:  # 광고에서 0 이하인게 나오기 때문에 방지하기 위해서 이미지 식별도 추가
+            #time.sleep(.3)
+            print('조합 시작')
+            self.combineFlag.setFlag(False)
+
+            if self.combineFlag.getTimeGrade() != 2:
+                self.noConbineAction()
+
             del self.diceBoxPixel[:]
             self.seperateDiceImage()
             self.getSumPixel()
             self.pixelSimilarity()
             self.combiDice()
 
+            self.combineFlag.setFlag(True)
+
         self.root.after(100, self.updateDisplay)
 
     def noConbineAction(self):
-        # self.diceNoCombineList.append([65883, 67295, 39611]) # hurricain_1
-        # self.diceNoCombineList.append([64546, 66114, 33308]) # hurricain 2
-        self.diceNoCombineList.append([63124, 64689, 25583])  # hurricain 3
-        self.diceNoCombineList.append([61813, 63403, 18602])  # hurricain 4
-        self.diceNoCombineList.append([60374, 61975, 10845])  # hurricain 5
-        self.diceNoCombineList.append([59088, 60685, 3848])  # hurricain 6
-        # self.diceNoCombineList.append([])  # hurricain 7
-        # self.diceNoCombineList.append([])   # after_hurricain 1
-        # self.diceNoCombineList.append([63675, 49283, 26868])   # after_hurricain 2
-        self.diceNoCombineList.append([61532, 39836, 14858])  # after_hurricain 3
-        self.diceNoCombineList.append([60335, 33835, 5756])  # after_hurricain 4
-        self.diceNoCombineList.append([58557, 25668, -5388])  # after_hurricain 5
-        self.diceNoCombineList.append([56989, 18333, -15384])  # after_hurricain 6
-        # self.diceNoCombineList.append([])  # after_hurricain 7
-        self.diceNoCombineList.append([57639, 42998, 30859]) # grow1
-        self.diceNoCombineList.append([52060, 35183, 23461]) # grow2
-        self.diceNoCombineList.append([45686, 25523, 14363]) # grow3
-        self.diceNoCombineList.append([40211, 17501, 6789]) # grow4
-        self.diceNoCombineList.append([33467, 7174, -2898]) # grow5
-        self.diceNoCombineList.append([29427, 3427, -6644]) # grow6
-        self.diceNoCombineList.append([49961, 36071, 23786]) # grow7
+
+        if self.combineFlag.getTimeGrade() == 0:
+
+            del self.diceNoCombineList[:]
+
+            print('현재 1단계')
+
+            self.diceNoCombineList.append([65883, 67295, 39611]) # hurricain_1
+            self.diceNoCombineList.append([64546, 66114, 33308]) # hurricain 2
+            self.diceNoCombineList.append([63124, 64689, 25583])  # hurricain 3
+            self.diceNoCombineList.append([61813, 63403, 18602])  # hurricain 4
+            self.diceNoCombineList.append([60374, 61975, 10845])  # hurricain 5
+            self.diceNoCombineList.append([59088, 60685, 3848])  # hurricain 6
+            self.diceNoCombineList.append([65320, 66691, 37147])  # hurricain 7
+
+            self.diceNoCombineList.append([65261, 55784, 35779])   # after_hurricain 1
+            self.diceNoCombineList.append([63675, 49283, 26868])   # after_hurricain 2
+            self.diceNoCombineList.append([61532, 39836, 14858])  # after_hurricain 3
+            self.diceNoCombineList.append([60335, 33835, 5756])  # after_hurricain 4
+            self.diceNoCombineList.append([58557, 25668, -5388])  # after_hurricain 5
+            self.diceNoCombineList.append([56989, 18333, -15384])  # after_hurricain 6
+            self.diceNoCombineList.append([64678, 53679, 32981])  # after_hurricain 7
+
+            self.diceNoCombineList.append([57639, 42998, 30859]) # grow1
+            self.diceNoCombineList.append([52060, 35183, 23461]) # grow2
+            self.diceNoCombineList.append([45686, 25523, 14363]) # grow3
+            self.diceNoCombineList.append([40211, 17501, 6789]) # grow4
+            self.diceNoCombineList.append([33467, 7174, -2898]) # grow5
+            self.diceNoCombineList.append([29427, 3427, -6644]) # grow6
+            self.diceNoCombineList.append([49961, 36071, 23786]) # grow7
+
+            self.combineFlag.plusTimeGrade()
+
+        elif self.combineFlag.getTimeGrade() == 1 and self.combineFlag.getTime() > 240:
+
+            print('현재 2단계')
+
+            del self.diceNoCombineList[0:2]
+            del self.diceNoCombineList[5:7]
+
+            self.combineFlag.plusTimeGrade()
 
     def getSumPixel(self):  # 픽셀값 가져오기
         for i in range(1,16):
@@ -82,7 +109,6 @@ class App(ImageController):
 
             self.diceBoxPixel.append((R - 162000, G - 159300, B - 174600))
 
-
     def pixelSimilarity(self):
         self.similarBox = [0 for val in range(15)]
         similarNum = 1
@@ -93,7 +119,7 @@ class App(ImageController):
                 continue
             for j in range(i+1,15):
                 R2, G2, B2 = self.diceBoxPixel[j]
-                if abs(R-R2) < 1100 and abs(G-G2) < 1100 and abs(B-B2) < 1100:
+                if abs(R-R2) < 500 and abs(G-G2) < 500 and abs(B-B2) < 500:
                     self.similarBox[i] = similarNum
                     self.similarBox[j] = similarNum
                     flag = True
@@ -124,28 +150,30 @@ class App(ImageController):
     
     def combiDice(self):
         for i in range(14):
-            if self.imageRecognize(self.imagePath('end ok')):
-                break
-            self.combineFlag.setFlag(False)
+            print(i)
+            #if self.imageRecognize(self.imagePath('end ok')):
+            #    break
             if self.similarBox[i] != 0 and self.isCombDice(i):
                 try:
                     j = self.similarBox.index(self.similarBox[i],i+1)
+                    print('찾음')
                 except:
                     self.similarBox[i] = 0
-                    break
+                    # break
+                    print('못 찾음')
+                    continue
                 x, y = self.diceBoxCenter[i]
                 goal_x, goal_y = self.diceBoxCenter[j]
                 self.diceMove(x + self.g_x + 89, y + self.g_y + 444, goal_x + self.g_x + 89, goal_y + self.g_y + 444)
                 self.similarBox[i] = 0
                 self.similarBox[j] = 0
-                break
+                # break
             elif sum(self.similarBox) == 0:
+                print('합 0')
                 break
-        self.combineFlag.setFlag(True)
 
     def isCombDice(self, num):
-
         for i in range(len(self.diceNoCombineList)):
-                if abs(self.diceBoxPixel[num][0] - self.diceNoCombineList[i][0]) < 3000 and abs(self.diceBoxPixel[num][1] - self.diceNoCombineList[i][1]) < 3000 and abs(self.diceBoxPixel[num][2] - self.diceNoCombineList[i][2]) < 3000:
+                if abs(self.diceBoxPixel[num][0] - self.diceNoCombineList[i][0]) < 2000 and abs(self.diceBoxPixel[num][1] - self.diceNoCombineList[i][1]) < 2000 and abs(self.diceBoxPixel[num][2] - self.diceNoCombineList[i][2]) < 2000:
                     return False
         return True

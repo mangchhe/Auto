@@ -25,6 +25,7 @@ class ControlTower(ImageController):
 
     def adAction(self): # 광고 보기
         print('광고 보기')
+        time.sleep(1)
         self.imageClickRepeat(self.imagePath('ad2'))
         if self.imageRecognize(self.imagePath('ad wait')):
             self.imageClick(self.imagePath('ad ok'))
@@ -37,7 +38,7 @@ class ControlTower(ImageController):
             self.reconnect()
         breakCount = 0
         while True:
-            if breakCount == 20:
+            if breakCount == 30:
                 break
             if self.imageRecognize(self.imagePath('start')):
                 break
@@ -67,7 +68,6 @@ class ControlTower(ImageController):
         x, y, w, h = pyautogui.locateOnScreen(self.imagePath('ad_err1'))
         pyautogui.click(x + w, y)
         self.imageClickRepeat(self.imagePath('ad_err2'))
-        self.sendKatalk('I reconnected random dice')
 
     def diceUpgrade(self, num): # 다이스 업그레이드
         pyautogui.click(self.g_x + 32 + (68 * num), self.g_y + 754 + 33, clicks=1)
@@ -131,6 +131,18 @@ class ControlTower(ImageController):
 
         self.combineFlag.setFlag(judge)
 
+    def initTime(self):
+
+        self.combineFlag.initTime()
+
+    def initTimeGrade(self):
+
+        self.combineFlag.initTimeGrade()
+
+    def plusTimeGrade(self):
+
+        self.combineFlag.plusTimeGrade()
+
     def sendimti(self):
 
         while True:
@@ -158,8 +170,6 @@ if __name__ == '__main__':
     controlTower = ControlTower()
 
     while True:
-
-        controlTower = ControlTower()
 
         flag = False
 
@@ -202,6 +212,8 @@ if __name__ == '__main__':
                     flag = True
                     break
                 if pyautogui.locateCenterOnScreen(controlTower.imagePath('create dice'), confidence=controlTower.conf) != None:
+                    controlTower.initTime()
+                    controlTower.initTimeGrade()
                     break
                 else:
                     breakCount += 1
@@ -221,18 +233,18 @@ if __name__ == '__main__':
                 playCount += 1
                 print('게임 끝')
                 time.sleep(7)
+                controlTower.plusTimeGrade()
                 break
             if controlTower.imageRecognize(controlTower.imagePath('fight')) and controlTower.imageRecognize(controlTower.imagePath('fight2')):  # err
                 controlTower.imageClick(controlTower.imagePath('fight'))
                 playCount += 1
                 print('게임 끝')
                 time.sleep(2)
+                controlTower.plusTimeGrade()
                 break
 
             if (controlTower.isComb() > 0 or controlTower.isComb2() > 0) and controlTower.imageRecognize(controlTower.imagePath('create dice')) and controlTower.getFlag():
                 controlTower.diceUpgrade(1)
                 if controlTower.imageRecognize(controlTower.imagePath('create dice')):
                     controlTower.imageClick(controlTower.imagePath('create dice'))
-                time.sleep(.3)
-            else:
-                time.sleep(3)
+                #time.sleep(.3)
