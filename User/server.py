@@ -8,10 +8,11 @@ now = datetime.now()
 with open('log.txt', 'a') as file:
     file.write("\n시작 : {}년 {}월 {}일 {}시 {}분\n".format(now.year, now.month, now.day, now.hour, now.minute))
 
+serverSock = socket(AF_INET, SOCK_STREAM)
+serverSock.bind(('', 8888))
+serverSock.listen()
+
 while True:
-    serverSock = socket(AF_INET, SOCK_STREAM)
-    serverSock.bind(('', 8888))
-    serverSock.listen(1)
     clientSock, addr = serverSock.accept()
     clientSock.send('ver1.0'.encode())
     count +=1
