@@ -5,10 +5,11 @@
 import pyautogui
 import time
 import win32gui
+import inactiveMacro
 
 jewelrys = ['diamond', 'amethyst', 'emerald', 'ruby', 'sapphire', 'skull', 'topaz']
 confidences = [0.95, 0.95, 0.9, 0.95, 0.95, 0.95, 0.95]
-g_l, g_t, g_w, g_h = 0, 0, 0, 0
+g_l, g_t, g_w, g_h, hwnd = 0, 0, 0, 0, 0
 
 """ 
     보석 개수 찾기
@@ -92,16 +93,14 @@ def moveFindedJewelry(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner):
             if jewelryPos:
                 count = 0
                 for x, y in jewelryPos:
-                    improvedClick(x, y)
-                    improvedClick(cube[0], cube[1])
+                    inactiveMacro.LRightClick(hwnd, y, x, g_t ,g_l)
                     count += 1
                     if count == 3:
-                        improvedClick(combineBtn[0], combineBtn[1])
-                        improvedClick(jewelryBox[0], jewelryBox[1])
-                        improvedClick(cube[0], cube[1])
-                        improvedClick(combineBtn[0], combineBtn[1])
-                        improvedClick(cubeCorner[0], cubeCorner[1])
-                        improvedClick(jewelryBox[0], jewelryBox[1])
+                        inactiveMacro.LeftClick(hwnd, combineBtn[1], combineBtn[0], g_t ,g_l)
+                        inactiveMacro.LRightClick(hwnd, jewelryBox[1], jewelryBox[0], g_t ,g_l)
+                        inactiveMacro.LeftClick(hwnd, combineBtn[1], combineBtn[0], g_t ,g_l)
+                        inactiveMacro.LeftClick(hwnd, cubeCorner[1], cubeCorner[0], g_t ,g_l)
+                        inactiveMacro.LeftClick(hwnd, jewelryBox[1], jewelryBox[0], g_t ,g_l)
                         count = 0
     else:
         if not combineBtn:
@@ -116,13 +115,11 @@ def moveFindedJewelry2(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner):
     if combineBtn and cube and jewelryBox:
         for jewelryPos in jewelrysPos:
             x, y = pyautogui.center(jewelryPos)
-            improvedClick(x, y)
-            improvedClick(cube[0], cube[1])
-            improvedClick(jewelryBox[0], jewelryBox[1])
-            improvedClick(cube[0], cube[1])
-            improvedClick(combineBtn[0], combineBtn[1])
-            improvedClick(cubeCorner[0], cubeCorner[1])
-            improvedClick(jewelryBox[0], jewelryBox[1])
+            inactiveMacro.LRightClick(hwnd, y, x, g_t ,g_l)
+            inactiveMacro.LRightClick(hwnd, jewelryBox[1], jewelryBox[0], g_t ,g_l)
+            inactiveMacro.LeftClick(hwnd, combineBtn[1], combineBtn[0], g_t ,g_l)
+            inactiveMacro.LeftClick(hwnd, cubeCorner[1], cubeCorner[0], g_t ,g_l)
+            inactiveMacro.LeftClick(hwnd, jewelryBox[1], jewelryBox[0], g_t ,g_l)
     else:
         if not combineBtn:
             print('조합버튼을 찾기 못했습니다.')
@@ -136,13 +133,11 @@ def moveFindedJewelry3(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner):
     if combineBtn and cube and jewelryBox:
         for jewelryPos in jewelrysPos:
             x, y = jewelryPos
-            improvedClick(x, y)
-            improvedClick(cube[0], cube[1])
-            improvedClick(jewelryBox[0], jewelryBox[1])
-            improvedClick(cube[0], cube[1])
-            improvedClick(combineBtn[0], combineBtn[1])
-            improvedClick(cubeCorner[0], cubeCorner[1])
-            improvedClick(jewelryBox[0], jewelryBox[1])
+            inactiveMacro.LRightClick(hwnd, y, x, g_t ,g_l)
+            inactiveMacro.LRightClick(hwnd, jewelryBox[1], jewelryBox[0], g_t ,g_l)
+            inactiveMacro.LeftClick(hwnd, combineBtn[1], combineBtn[0], g_t ,g_l)
+            inactiveMacro.LeftClick(hwnd, cubeCorner[1], cubeCorner[0], g_t ,g_l)
+            inactiveMacro.LeftClick(hwnd, jewelryBox[1], jewelryBox[0], g_t ,g_l)
     else:
         if not combineBtn:
             print('조합버튼을 찾기 못했습니다.')
@@ -156,14 +151,12 @@ def moveFindedJewelry3(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner):
 """
 def jewelryCombineMain():
 
-    global g_l, g_t, g_w, g_h
+    global g_l, g_t, g_w, g_h, hwnd
 
     try:
         hwnd = win32gui.FindWindow('Diablo II',None)
         g_l, g_t, g_w, g_h = win32gui.GetWindowRect(hwnd)
         combineBtn, cube, jewelryBox, cubeCorner = findEtc()
-        g_l += (g_w - g_l) // 2
-        g_t += (g_h - g_t) // 2
         jewelrysPos = findJewelryNum()
         moveFindedJewelry(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner)
     except:
@@ -171,14 +164,12 @@ def jewelryCombineMain():
 
 def jewelryCombineMain2():
 
-    global g_l, g_t, g_w, g_h
+    global g_l, g_t, g_w, g_h, hwnd
 
     try:
         hwnd = win32gui.FindWindow('Diablo II',None)
         g_l, g_t, g_w, g_h = win32gui.GetWindowRect(hwnd)
         combineBtn, cube, jewelryBox, cubeCorner = findEtc()
-        g_l += (g_w - g_l) // 2
-        g_t += (g_h - g_t) // 2
         jewelrysPos = findJewelryNum2()
         moveFindedJewelry2(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner)
     except:
@@ -186,14 +177,12 @@ def jewelryCombineMain2():
 
 def jewelryCombineMain3():
 
-    global g_l, g_t, g_w, g_h
+    global g_l, g_t, g_w, g_h, hwnd
 
     try:
         hwnd = win32gui.FindWindow('Diablo II',None)
         g_l, g_t, g_w, g_h = win32gui.GetWindowRect(hwnd)
         combineBtn, cube, jewelryBox, cubeCorner = findEtc()
-        g_l += (g_w - g_l) // 2
-        g_t += (g_h - g_t) // 2
         jewelrysPos = findJewelryNum()
         jewelrysPos2 = findJewelryNum2()
         jewelrysPos3 = findJewelryNum3(jewelrysPos, jewelrysPos2)
