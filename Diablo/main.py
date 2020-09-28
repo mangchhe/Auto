@@ -23,13 +23,13 @@ def findJewelryNum():
 
     for i, jewelry in enumerate(jewelrys):
         
-        data = list(pyautogui.locateAllOnScreen('img/jewelry/' + jewelry + '.PNG', confidence = confidences[i], region = (g_l, g_t, g_w, g_h)))
+        data = inactiveMacro.ImagesPosExtract(hwnd, 'img/jewelry/' + jewelry + '.PNG')
         jewelrysPos.append([])
 
         if len(data) > 2:
             print(jewelry, str(len(data)) + '개', '찾음')
             for j in range(3 * (len(data) // 3)):
-                x, y = pyautogui.center(data[j])
+                x, y = data[j]
                 jewelrysPos[i].append([x,y])
         else:
             print(jewelry, str(3 - len(data)) + '개', '부족')
@@ -41,9 +41,7 @@ def findJewelryNum2():
     jewelrysPos = []
 
     for i, jewelry in enumerate(jewelrys):
-        
-        jewelrysPos.extend(list(pyautogui.locateAllOnScreen('img/jewelry/' + jewelry + '.PNG', confidence = confidences[i], region = (g_l, g_t, g_w, g_h))))
-
+        jewelrysPos.extend(inactiveMacro.ImagesPosExtract(hwnd, 'img/jewelry/' + jewelry + '.PNG'))
     return jewelrysPos
 
 def findJewelryNum3(jewelrysPos, jewelrysPos2):
@@ -53,8 +51,6 @@ def findJewelryNum3(jewelrysPos, jewelrysPos2):
     for i in jewelrysPos:
         for j in i:
             tmp.append(j)
-
-    jewelrysPos2 = list(map(lambda x : list(pyautogui.center(x)), jewelrysPos2))
 
     for i in range(len(jewelrysPos2)-1, -1, -1):
         if jewelrysPos2[i] in tmp:
@@ -68,20 +64,12 @@ def findJewelryNum3(jewelrysPos, jewelrysPos2):
 """
 def findEtc():
 
-    combineBtn = pyautogui.locateCenterOnScreen('img/function/combine.PNG', confidence = 0.9, region = (g_l, g_t, g_w, g_h))
-    cube = pyautogui.locateCenterOnScreen('img/boxs/cube.PNG', confidence = 0.9, region = (g_l, g_t, g_w, g_h))
-    jewelryBox = pyautogui.locateCenterOnScreen('img/boxs/jewelryBox.PNG', confidence = 0.9, region = (g_l, g_t, g_w, g_h))
-    cubeCorner = pyautogui.locateCenterOnScreen('img/etc/cubeCorner.PNG', confidence = 0.9, region = (g_l, g_t, g_w, g_h))
+    combineBtn = inactiveMacro.ImagePosExtract(hwnd, 'img/function/combine.PNG')
+    cube = inactiveMacro.ImagePosExtract(hwnd, 'img/boxs/cube.PNG')
+    jewelryBox = inactiveMacro.ImagePosExtract(hwnd, 'img/boxs/jewelryBox.PNG')
+    cubeCorner = inactiveMacro.ImagePosExtract(hwnd, 'img/etc/cubeCorner.PNG')
 
     return combineBtn, cube, jewelryBox, cubeCorner
-
-""" 
-    sleep을 조합한 클릭
-"""
-def improvedClick(x, y):
-    pyautogui.moveTo(x, y)
-    pyautogui.click()
-    time.sleep(.1)
 
 """
     쥬얼 합성
@@ -93,14 +81,14 @@ def moveFindedJewelry(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner):
             if jewelryPos:
                 count = 0
                 for x, y in jewelryPos:
-                    inactiveMacro.LRightClick(hwnd, y, x, g_t ,g_l)
+                    inactiveMacro.LRightClick(hwnd, x, y)
                     count += 1
                     if count == 3:
-                        inactiveMacro.LeftClick(hwnd, combineBtn[1], combineBtn[0], g_t ,g_l)
-                        inactiveMacro.LRightClick(hwnd, jewelryBox[1], jewelryBox[0], g_t ,g_l)
-                        inactiveMacro.LeftClick(hwnd, combineBtn[1], combineBtn[0], g_t ,g_l)
-                        inactiveMacro.LeftClick(hwnd, cubeCorner[1], cubeCorner[0], g_t ,g_l)
-                        inactiveMacro.LeftClick(hwnd, jewelryBox[1], jewelryBox[0], g_t ,g_l)
+                        inactiveMacro.LeftClick(hwnd, combineBtn[0], combineBtn[1])
+                        inactiveMacro.LRightClick(hwnd, jewelryBox[0], jewelryBox[1])
+                        inactiveMacro.LeftClick(hwnd, combineBtn[0], combineBtn[1])
+                        inactiveMacro.LeftClick(hwnd, cubeCorner[0], cubeCorner[1])
+                        inactiveMacro.LeftClick(hwnd, jewelryBox[0], jewelryBox[1])
                         count = 0
     else:
         if not combineBtn:
@@ -114,12 +102,12 @@ def moveFindedJewelry2(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner):
 
     if combineBtn and cube and jewelryBox:
         for jewelryPos in jewelrysPos:
-            x, y = pyautogui.center(jewelryPos)
-            inactiveMacro.LRightClick(hwnd, y, x, g_t ,g_l)
-            inactiveMacro.LRightClick(hwnd, jewelryBox[1], jewelryBox[0], g_t ,g_l)
-            inactiveMacro.LeftClick(hwnd, combineBtn[1], combineBtn[0], g_t ,g_l)
-            inactiveMacro.LeftClick(hwnd, cubeCorner[1], cubeCorner[0], g_t ,g_l)
-            inactiveMacro.LeftClick(hwnd, jewelryBox[1], jewelryBox[0], g_t ,g_l)
+            x, y = jewelryPos
+            inactiveMacro.LRightClick(hwnd, x, y)
+            inactiveMacro.LRightClick(hwnd, jewelryBox[0], jewelryBox[1])
+            inactiveMacro.LeftClick(hwnd, combineBtn[0], combineBtn[1])
+            inactiveMacro.LeftClick(hwnd, cubeCorner[0], cubeCorner[1])
+            inactiveMacro.LeftClick(hwnd, jewelryBox[0], jewelryBox[1])
     else:
         if not combineBtn:
             print('조합버튼을 찾기 못했습니다.')
@@ -133,11 +121,11 @@ def moveFindedJewelry3(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner):
     if combineBtn and cube and jewelryBox:
         for jewelryPos in jewelrysPos:
             x, y = jewelryPos
-            inactiveMacro.LRightClick(hwnd, y, x, g_t ,g_l)
-            inactiveMacro.LRightClick(hwnd, jewelryBox[1], jewelryBox[0], g_t ,g_l)
-            inactiveMacro.LeftClick(hwnd, combineBtn[1], combineBtn[0], g_t ,g_l)
-            inactiveMacro.LeftClick(hwnd, cubeCorner[1], cubeCorner[0], g_t ,g_l)
-            inactiveMacro.LeftClick(hwnd, jewelryBox[1], jewelryBox[0], g_t ,g_l)
+            inactiveMacro.LRightClick(hwnd, x, y)
+            inactiveMacro.LRightClick(hwnd, jewelryBox[0], jewelryBox[1])
+            inactiveMacro.LeftClick(hwnd, combineBtn[0], combineBtn[1])
+            inactiveMacro.LeftClick(hwnd, cubeCorner[0], cubeCorner[1])
+            inactiveMacro.LeftClick(hwnd, jewelryBox[0], jewelryBox[1])
     else:
         if not combineBtn:
             print('조합버튼을 찾기 못했습니다.')
@@ -153,14 +141,12 @@ def jewelryCombineMain():
 
     global g_l, g_t, g_w, g_h, hwnd
 
-    try:
-        hwnd = win32gui.FindWindow('Diablo II',None)
-        g_l, g_t, g_w, g_h = win32gui.GetWindowRect(hwnd)
-        combineBtn, cube, jewelryBox, cubeCorner = findEtc()
-        jewelrysPos = findJewelryNum()
-        moveFindedJewelry(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner)
-    except:
-        print('디아블로가 실행되어 있지 않습니다.')
+    hwnd = win32gui.FindWindow('Diablo II',None)
+    g_l, g_t, g_w, g_h = win32gui.GetWindowRect(hwnd)
+    combineBtn, cube, jewelryBox, cubeCorner = findEtc()
+    jewelrysPos = findJewelryNum()
+    moveFindedJewelry(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner)
+
 
 def jewelryCombineMain2():
 
