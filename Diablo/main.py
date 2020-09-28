@@ -8,7 +8,6 @@ import win32gui
 import inactiveMacro
 
 jewelrys = ['diamond', 'amethyst', 'emerald', 'ruby', 'sapphire', 'skull', 'topaz']
-confidences = [0.95, 0.95, 0.9, 0.95, 0.95, 0.95, 0.95]
 g_l, g_t, g_w, g_h, hwnd = 0, 0, 0, 0, 0
 
 """ 
@@ -100,32 +99,17 @@ def moveFindedJewelry(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner):
 
 def moveFindedJewelry2(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner):
 
+    flag = True
     if combineBtn and cube and jewelryBox:
         for jewelryPos in jewelrysPos:
             x, y = jewelryPos
             inactiveMacro.LRightClick(hwnd, x, y)
-            inactiveMacro.LRightClick(hwnd, jewelryBox[0], jewelryBox[1])
+            if flag:
+                inactiveMacro.LRightClick(hwnd, jewelryBox[0], jewelryBox[1])
+                flag = False
             inactiveMacro.LeftClick(hwnd, combineBtn[0], combineBtn[1])
-            inactiveMacro.LeftClick(hwnd, cubeCorner[0], cubeCorner[1])
-            inactiveMacro.LeftClick(hwnd, jewelryBox[0], jewelryBox[1])
-    else:
-        if not combineBtn:
-            print('조합버튼을 찾기 못했습니다.')
-        if not cube:
-            print('큐브를 찾기 못했습니다.')
-        if not jewelryBox:
-            print('보석상자를 찾기 못했습니다.')
-
-def moveFindedJewelry3(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner):
-
-    if combineBtn and cube and jewelryBox:
-        for jewelryPos in jewelrysPos:
-            x, y = jewelryPos
-            inactiveMacro.LRightClick(hwnd, x, y)
-            inactiveMacro.LRightClick(hwnd, jewelryBox[0], jewelryBox[1])
-            inactiveMacro.LeftClick(hwnd, combineBtn[0], combineBtn[1])
-            inactiveMacro.LeftClick(hwnd, cubeCorner[0], cubeCorner[1])
-            inactiveMacro.LeftClick(hwnd, jewelryBox[0], jewelryBox[1])
+        inactiveMacro.LeftClick(hwnd, cubeCorner[0], cubeCorner[1])
+        inactiveMacro.LeftClick(hwnd, jewelryBox[0], jewelryBox[1])
     else:
         if not combineBtn:
             print('조합버튼을 찾기 못했습니다.')
@@ -173,6 +157,6 @@ def jewelryCombineMain3():
         jewelrysPos2 = findJewelryNum2()
         jewelrysPos3 = findJewelryNum3(jewelrysPos, jewelrysPos2)
         moveFindedJewelry(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner)
-        moveFindedJewelry3(jewelrysPos3, combineBtn, cube, jewelryBox, cubeCorner)
+        moveFindedJewelry2(jewelrysPos3, combineBtn, cube, jewelryBox, cubeCorner)
     except:
         print('디아블로가 실행되어 있지 않습니다.')
