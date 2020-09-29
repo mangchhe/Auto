@@ -1,10 +1,8 @@
 """
     작성일 : 20/09/27
 """
-
 import pyautogui
 import time
-import win32gui
 import inactiveMacro
 
 jewelrys = ['diamond', 'amethyst', 'emerald', 'ruby', 'sapphire', 'skull', 'topaz']
@@ -125,8 +123,8 @@ def jewelryCombineMain():
 
     global g_l, g_t, g_w, g_h, hwnd
     try:
-        hwnd = win32gui.FindWindow('Diablo II',None)
-        g_l, g_t, g_w, g_h = win32gui.GetWindowRect(hwnd)
+        hwnd = inactiveMacro.GetHandle()
+        g_l, g_t, g_w, g_h = inactiveMacro.GetWindowRect(hwnd)
         combineBtn, cube, jewelryBox, cubeCorner = findEtc()
         jewelrysPos = findJewelryNum()
         moveFindedJewelry(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner)
@@ -139,8 +137,8 @@ def jewelryCombineMain2():
     global g_l, g_t, g_w, g_h, hwnd
 
     try:
-        hwnd = win32gui.FindWindow('Diablo II',None)
-        g_l, g_t, g_w, g_h = win32gui.GetWindowRect(hwnd)
+        hwnd = inactiveMacro.GetHandle()
+        g_l, g_t, g_w, g_h = inactiveMacro.GetWindowRect(hwnd)
         combineBtn, cube, jewelryBox, cubeCorner = findEtc()
         jewelrysPos = findJewelryNum2()
         moveFindedJewelry2(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner)
@@ -152,8 +150,8 @@ def jewelryCombineMain3():
     global g_l, g_t, g_w, g_h, hwnd
 
     try:
-        hwnd = win32gui.FindWindow('Diablo II',None)
-        g_l, g_t, g_w, g_h = win32gui.GetWindowRect(hwnd)
+        hwnd = inactiveMacro.GetHandle()
+        g_l, g_t, g_w, g_h = inactiveMacro.GetWindowRect(hwnd)
         combineBtn, cube, jewelryBox, cubeCorner = findEtc()
         jewelrysPos = findJewelryNum()
         jewelrysPos2 = findJewelryNum2()

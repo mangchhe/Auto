@@ -8,6 +8,15 @@ from PIL import Image
 import numpy as np
 import cv2
 
+def GetHandle():
+    return win32gui.FindWindow('Diablo II', None)
+
+def GetHandleName(name):
+    return win32gui.FindWindow(None, name)
+
+def GetWindowRect(hwnd):
+    return win32gui.GetWindowRect(hwnd)
+
 def MouseMove(handle, x, y):
     y -= 28
     lparam = win32api.MAKELONG(x, y)
@@ -23,6 +32,15 @@ def LeftClick(handle, x, y):
     time.sleep(.15)
     win32api.SendMessage(handle, win32con.WM_LBUTTONUP, 0, lparam)
 
+def DoubleLeftClick(handle, x, y):
+    MouseMove(handle, x, y)
+    y -= 28
+    lparam = win32api.MAKELONG(x, y)
+    win32api.SendMessage(handle, win32con.WM_LBUTTONDOWN, 0, lparam) 
+    win32api.SendMessage(handle, win32con.WM_LBUTTONUP, 0, lparam)
+    win32api.SendMessage(handle, win32con.WM_LBUTTONDOWN, 0, lparam) 
+    win32api.SendMessage(handle, win32con.WM_LBUTTONUP, 0, lparam)
+
 def RightClick(handle, x, y):
     time.sleep(.15)
     lparam = win32api.MAKELONG(x, y)
@@ -33,9 +51,22 @@ def RightClick(handle, x, y):
 def LRightClick(handle, x, y):
     LeftClick(handle, x, y)
     RightClick(handle, x, y)
+
+def ClickText(handle, text):
+    time.sleep(.15)
+    win32api.SendMessage(handle, win32con.WM_KEYDOWN, ord(text), 0)
+    win32api.SendMessage(handle, win32con.WM_KEYUP, ord(text), 0)
+
+def TypingText(handle, text):
+    time.sleep(.15)
+    win32api.SendMessage(handle, win32con.WM_CHAR, ord(text), 0)
+
+def TypingTexts(handle, texts):
+    time.sleep(.15)
+    for text in texts:
+        win32api.SendMessage(handle, win32con.WM_CHAR, ord(text), 0)
     
 def ImagesPosExtract(handle, path):
-
     left, top, right, bot = win32gui.GetWindowRect(handle)
     w = right - left
     h = bot - top
@@ -75,12 +106,11 @@ def ImagesPosExtract(handle, path):
     imgsPos = []
 
     for pt in zip(*loc[::-1]):  # Switch collumns and rows
-        imgsPos.append([pt[0] + w//2, pt[1] + h//2])
+        imgsPos.append([pt[0] + h//2, pt[1] + w//2])
 
     return imgsPos
 
 def ImagePosExtract(handle, path):
-
     left, top, right, bot = win32gui.GetWindowRect(handle)
     w = right - left
     h = bot - top
@@ -120,8 +150,12 @@ def ImagePosExtract(handle, path):
     imgPos = []
 
     for pt in zip(*loc[::-1]):  # Switch collumns and rows
-        imgPos.append(pt[0] + w//2)
-        imgPos.append(pt[1] + h//2)
+        imgPos.append(pt[0] + h//2)
+        imgPos.append(pt[1] + w//2)
+        """ cv2.rectangle(img_rgb, pt, (pt[0] + h, pt[1] + w), (255,255,0), 2) """
         break
+
+    """ img_rgb = Image.fromarray(img_rgb)
+    img_rgb.show() """
 
     return imgPos

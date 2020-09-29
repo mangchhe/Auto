@@ -5,6 +5,7 @@ import sys
 
 from jewelry import jewelryCombineMain, jewelryCombineMain2, jewelryCombineMain3
 from hotkey import hotkeyMain
+from room import Room
 
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout
 from PyQt5.QtGui import QIcon
@@ -13,10 +14,10 @@ class MyApp(QWidget):
 
     def __init__(self):
         super().__init__()
-
-        hotkeyMain()
-
+        
+        self.room = Room()
         self.initUI()
+        hotkeyMain()
 
     def initUI(self):
 
@@ -26,11 +27,14 @@ class MyApp(QWidget):
         btn2.clicked.connect(jewelryCombineMain2)
         btn3 = QPushButton('통합 조합', self)
         btn3.clicked.connect(jewelryCombineMain3)
+        btn4 = QPushButton('방 리셋', self)
+        btn4.clicked.connect(self.room.main)
 
         vbox = QVBoxLayout()
         vbox.addWidget(btn)
         vbox.addWidget(btn2)
         vbox.addWidget(btn3)
+        vbox.addWidget(btn4)
         
         self.setLayout(vbox)
         self.setWindowTitle('디아블로 매크로')
