@@ -26,9 +26,9 @@ class MyApp(QWidget):
         label.setAlignment(Qt.AlignCenter)
 
         btn = QPushButton('보석 낱개 조합(F2)', self)
-        btn.clicked.connect(jewelryCombineMain)
+        btn.clicked.connect(jewelryCombineMain2)
         btn2 = QPushButton('퍼보 만들어 보석 조합(F3)', self)
-        btn2.clicked.connect(jewelryCombineMain2)
+        btn2.clicked.connect(jewelryCombineMain)
         btn3 = QPushButton('통합 조합(F4)', self)
         btn3.clicked.connect(jewelryCombineMain3)
         btn4 = QPushButton('방 리셋', self)

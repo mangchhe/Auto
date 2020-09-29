@@ -4,6 +4,7 @@
 import pyautogui
 import time
 import inactiveMacro
+import threading
 
 jewelrys = ['diamond', 'amethyst', 'emerald', 'ruby', 'sapphire', 'skull', 'topaz']
 g_l, g_t, g_w, g_h, hwnd = 0, 0, 0, 0, 0
@@ -120,10 +121,24 @@ def moveFindedJewelry2(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner):
     보석 합성 메인
 """
 def jewelryCombineMain():
+    thread = threading.Thread(target=execute)
+    thread.daemon = True
+    thread.start()
 
+def jewelryCombineMain2():
+    thread = threading.Thread(target=execute2)
+    thread.daemon = True
+    thread.start()
+
+def jewelryCombineMain3():
+    thread = threading.Thread(target=execute3)
+    thread.daemon = True
+    thread.start()
+
+def execute():
     global g_l, g_t, g_w, g_h, hwnd
     try:
-        hwnd = inactiveMacro.GetHandle()
+        hwnd = inactiveMacro.GetHandleName('D2Loader')
         g_l, g_t, g_w, g_h = inactiveMacro.GetWindowRect(hwnd)
         combineBtn, cube, jewelryBox, cubeCorner = findEtc()
         jewelrysPos = findJewelryNum()
@@ -131,13 +146,11 @@ def jewelryCombineMain():
     except:
         print('디아블로가 실행되어 있지 않습니다.')
 
-
-def jewelryCombineMain2():
-
+def execute2():
     global g_l, g_t, g_w, g_h, hwnd
 
     try:
-        hwnd = inactiveMacro.GetHandle()
+        hwnd = inactiveMacro.GetHandleName('D2Loader')
         g_l, g_t, g_w, g_h = inactiveMacro.GetWindowRect(hwnd)
         combineBtn, cube, jewelryBox, cubeCorner = findEtc()
         jewelrysPos = findJewelryNum2()
@@ -145,12 +158,11 @@ def jewelryCombineMain2():
     except:
         print('디아블로가 실행되어 있지 않습니다.')
 
-def jewelryCombineMain3():
-
+def execute3():
     global g_l, g_t, g_w, g_h, hwnd
 
     try:
-        hwnd = inactiveMacro.GetHandle()
+        hwnd = inactiveMacro.GetHandleName('D2Loader')
         g_l, g_t, g_w, g_h = inactiveMacro.GetWindowRect(hwnd)
         combineBtn, cube, jewelryBox, cubeCorner = findEtc()
         jewelrysPos = findJewelryNum()
