@@ -9,13 +9,10 @@ def handlePress( key ):
  
 def handleRelease( key ):
     if key == Key.f2:
-        time.sleep(.3)
         jewelryCombineMain()
     if key == Key.f3:
-        time.sleep(.3)
         jewelryCombineMain2()
     if key == Key.f4:
-        time.sleep(.3)
         jewelryCombineMain3()
  
 def execute():
