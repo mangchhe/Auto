@@ -124,12 +124,14 @@ def moveFindedJewelry2(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner):
 def jewelryCombineMain():
 
     global g_l, g_t, g_w, g_h, hwnd
-
-    hwnd = win32gui.FindWindow('Diablo II',None)
-    g_l, g_t, g_w, g_h = win32gui.GetWindowRect(hwnd)
-    combineBtn, cube, jewelryBox, cubeCorner = findEtc()
-    jewelrysPos = findJewelryNum()
-    moveFindedJewelry(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner)
+    try:
+        hwnd = win32gui.FindWindow('Diablo II',None)
+        g_l, g_t, g_w, g_h = win32gui.GetWindowRect(hwnd)
+        combineBtn, cube, jewelryBox, cubeCorner = findEtc()
+        jewelrysPos = findJewelryNum()
+        moveFindedJewelry(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner)
+    except:
+        print('디아블로가 실행되어 있지 않습니다.')
 
 
 def jewelryCombineMain2():

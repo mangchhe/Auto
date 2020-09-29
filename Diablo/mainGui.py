@@ -1,44 +1,44 @@
-from socket import *
-from tkinter import *
-from tkinter import messagebox
-from main import jewelryCombineMain, jewelryCombineMain2, jewelryCombineMain3
-import threading
-import time
-from pynput.keyboard import Listener, Key
- 
-def handlePress( key ):
-    pass
- 
-def handleRelease( key ):
-    if key == Key.f2:
-        jewelryCombineMain3()
- 
-def execute():
-    with Listener(on_press=handlePress, on_release=handleRelease) as listener:
-        listener.join()
+"""
+    작성일 : 20/09/27
+"""
+import sys
 
-def doSomething():
-    if messagebox.askokcancel("Quit", "Do you want to quit?"):
-        window.destroy()
+from jewelry import jewelryCombineMain, jewelryCombineMain2, jewelryCombineMain3
+from hotkey import hotkeyMain
 
-window = Tk()
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout
+from PyQt5.QtGui import QIcon
 
-thread = threading.Thread(target=execute)
-thread.daemon = True
-thread.start()
+class MyApp(QWidget):
 
-window.title('편하게 살자')
-window.geometry("200x72+100+100")
-window.resizable(True,True)
-window.protocol('WM_DELETE_WINDOW', doSomething)
+    def __init__(self):
+        super().__init__()
 
-b1 = Button(window, text = '보석 낱개 조합', command=jewelryCombineMain2)
-b2 = Button(window, text = '퍼보 만들어 보석 조합', command=jewelryCombineMain)
-b3 = Button(window, text = '통합 조합', command=jewelryCombineMain3)
-b1.pack(fill=X)
-b2.pack(fill=X)
-b3.pack(fill=X)
+        hotkeyMain()
 
-window.mainloop()
+        self.initUI()
 
+    def initUI(self):
 
+        btn = QPushButton('보석 낱개 조합', self)
+        btn.clicked.connect(jewelryCombineMain)
+        btn2 = QPushButton('퍼보 만들어 보석 조합', self)
+        btn2.clicked.connect(jewelryCombineMain2)
+        btn3 = QPushButton('통합 조합', self)
+        btn3.clicked.connect(jewelryCombineMain3)
+
+        vbox = QVBoxLayout()
+        vbox.addWidget(btn)
+        vbox.addWidget(btn2)
+        vbox.addWidget(btn3)
+        
+        self.setLayout(vbox)
+        self.setWindowTitle('디아블로 매크로')
+        self.setWindowIcon(QIcon('diablo_favicon.ico'))
+        self.setGeometry(300, 300, 300, 200)
+        self.show()
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = MyApp()
+    sys.exit(app.exec_())
