@@ -16,6 +16,27 @@ class Room:
         self.__count = 0
         self.__start = True
         self.__monitors = 0
+        self.__difficulty = 1
+        self.__difficulty2 = 1
+        self.__difficulty3 = 1
+
+    def setDifficulty(self, num):
+        self.__difficulty = num
+
+    def setDifficulty2(self, num):
+        self.__difficulty2 = num
+
+    def setDifficulty3(self, num):
+        self.__difficulty3 = num
+
+    def getDifficulty(self):
+        return self.__difficulty
+
+    def getDifficulty2(self):
+        return self.__difficulty2
+
+    def getDifficulty3(self):
+        return self.__difficulty3
 
     def CreateRoomTitle(self):
         random.seed(datetime.now())
