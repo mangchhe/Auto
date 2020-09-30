@@ -1,19 +1,24 @@
 from pynput.keyboard import Listener, Key
 import time
 import threading
+from jewelry import Jewelry
+from room import Room
 
-from jewelry import jewelryCombineMain, jewelryCombineMain2, jewelryCombineMain3
+jewelry = Jewelry()
+room = Room()
 
 def handlePress( key ):
     pass
  
 def handleRelease( key ):
     if key == Key.f2:
-        jewelryCombineMain()
+        jewelry.jewelryCombineMain2()
     if key == Key.f3:
-        jewelryCombineMain2()
+        jewelry.jewelryCombineMain()
     if key == Key.f4:
-        jewelryCombineMain3()
+        jewelry.jewelryCombineMain3()
+    if key == Key.f5:
+        room.main()
  
 def execute():
     with Listener(on_press=handlePress, on_release=handleRelease) as listener:

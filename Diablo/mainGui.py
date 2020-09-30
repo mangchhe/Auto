@@ -3,7 +3,7 @@
 """
 import sys
 
-from jewelry import jewelryCombineMain, jewelryCombineMain2, jewelryCombineMain3
+from jewelry import Jewelry
 from hotkey import hotkeyMain
 from room import Room
 
@@ -18,6 +18,7 @@ class MyApp(QWidget):
         
         hotkeyMain()
         self.room = Room()
+        self.jewelry = Jewelry()
         self.initUI()
 
     def initUI(self):
@@ -26,12 +27,12 @@ class MyApp(QWidget):
         label.setAlignment(Qt.AlignCenter)
 
         btn = QPushButton('보석 낱개 조합(F2)', self)
-        btn.clicked.connect(jewelryCombineMain2)
+        btn.clicked.connect(self.jewelry.jewelryCombineMain2)
         btn2 = QPushButton('퍼보 만들어 보석 조합(F3)', self)
-        btn2.clicked.connect(jewelryCombineMain)
+        btn2.clicked.connect(self.jewelry.jewelryCombineMain)
         btn3 = QPushButton('통합 조합(F4)', self)
-        btn3.clicked.connect(jewelryCombineMain3)
-        btn4 = QPushButton('방 리셋', self)
+        btn3.clicked.connect(self.jewelry.jewelryCombineMain3)
+        btn4 = QPushButton('방 리셋(F5)', self)
         btn4.clicked.connect(self.room.main)
         btn5 = QPushButton('종료', self)
         btn5.clicked.connect(QCoreApplication.instance().quit)
