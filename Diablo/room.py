@@ -59,19 +59,21 @@ class Room:
 
     def End(self):
         x, y = ImagePosExtract(self.__hwnd, 'img/room/gameMake.PNG')
-        x, y = ImagePosExtract(self.__hwnd2, 'img/room/gameJoin.PNG')
-        x, y = ImagePosExtract(self.__hwnd3, 'img/room/gameJoin.PNG')
         
         if self.__monitors == 1:
             LeftClick(self.__hwnd, x, y)
         elif self.__monitors == 2:
+            x, y = ImagePosExtract(self.__hwnd2, 'img/room/gameJoin.PNG')
             LeftClick(self.__hwnd, x, y)
             time.sleep(1)
             LeftClick(self.__hwnd2, x, y)
         elif self.__monitors == 3:
+            x, y = ImagePosExtract(self.__hwnd2, 'img/room/gameJoin.PNG')
+            x, y = ImagePosExtract(self.__hwnd3, 'img/room/gameJoin.PNG')
             LeftClick(self.__hwnd, x, y)
             time.sleep(1)
             LeftClick(self.__hwnd2, x, y)
+            time.sleep(1)
             LeftClick(self.__hwnd3, x, y)
 
     def main(self):
