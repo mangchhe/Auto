@@ -30,9 +30,11 @@ class MyApp(QWidget):
         btn3 = QPushButton('통합 조합(F4)')
         btn3.clicked.connect(self.jewelry.jewelryCombineMain3)
         btn4 = QPushButton('방 리셋(F5)')
-        btn4.clicked.connect(self.room.main)
-        btn5 = QPushButton('종료')
-        btn5.clicked.connect(QCoreApplication.instance().quit)
+        btn4.clicked.connect(self.room.TogetherMain)
+        btn5 = QPushButton('개별 방 리셋(F6)')
+        btn5.clicked.connect(self.room.EachMain)
+        btn6 = QPushButton('종료')
+        btn6.clicked.connect(QCoreApplication.instance().quit)
 
         leftBox1 = QGroupBox('기능')
 
@@ -42,6 +44,7 @@ class MyApp(QWidget):
         leftTop.addWidget(btn3)
         leftTop.addWidget(btn4)
         leftTop.addWidget(btn5)
+        leftTop.addWidget(btn6)
 
         leftBox = QVBoxLayout()
         leftBox.addLayout(leftTop)
@@ -113,27 +116,27 @@ class MyApp(QWidget):
 
     def RadioButtonClicked(self):
         if self.rightRadio1.isChecked():
-            self.room.setDifficulty(1)
+            self.room.setDifficulty('normal')
         elif self.rightRadio11.isChecked():
-            self.room.setDifficulty(2)
+            self.room.setDifficulty('nightmare')
         elif self.rightRadio111.isChecked():
-            self.room.setDifficulty(3)
+            self.room.setDifficulty('hell')
 
     def RadioButtonClicked2(self):
         if self.rightRadio2.isChecked():
-            self.room.setDifficulty2(1)
+            self.room.setDifficulty2('normal')
         elif self.rightRadio22.isChecked():
-            self.room.setDifficulty2(2)
+            self.room.setDifficulty2('nightmare')
         elif self.rightRadio222.isChecked():
-            self.room.setDifficulty2(3)
+            self.room.setDifficulty2('hell')
 
     def RadioButtonClicked3(self):
         if self.rightRadio3.isChecked():
-            self.room.setDifficulty3(1)
+            self.room.setDifficulty3('normal')
         elif self.rightRadio33.isChecked():
-            self.room.setDifficulty3(2)
+            self.room.setDifficulty3('nightmare')
         elif self.rightRadio333.isChecked():
-            self.room.setDifficulty3(3)
+            self.room.setDifficulty3('hell')
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

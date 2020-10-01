@@ -152,7 +152,11 @@ def ImagePosExtract(handle, path):
     for pt in zip(*loc[::-1]):  # Switch collumns and rows
         imgPos.append(pt[0] + h//2)
         imgPos.append(pt[1] + w//2)
+        #cv2.rectangle(img_rgb, pt, (pt[0] + h, pt[1] + w), (255,0,0), 0)
         break
+
+    #img_rgb = Image.fromarray(img_rgb)
+    #img_rgb.show()
 
     if imgPos:
         return imgPos

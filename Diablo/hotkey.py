@@ -18,7 +18,9 @@ def handleRelease( key ):
     if key == Key.f4:
         jewelry.jewelryCombineMain3()
     if key == Key.f5:
-        room.main()
+        room.TogtherMain()
+    if key == Key.f6:
+        room.EachMain()
  
 def execute():
     with Listener(on_press=handlePress, on_release=handleRelease) as listener:
