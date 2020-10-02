@@ -11,7 +11,6 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QCoreApplication, Qt, QSize, QRect
 
-
 class MyApp(QWidget):
 
     def __init__(self):
@@ -25,15 +24,15 @@ class MyApp(QWidget):
 
     def initUI(self):
 
-        btn = QPushButton('보석 낱개 조합(F2)')
+        btn = QPushButton('보석 낱개 조합')
         btn.clicked.connect(self.jewelry.jewelryCombineMain2)
-        btn2 = QPushButton('퍼보 만들어 보석 조합(F3)')
+        btn2 = QPushButton('퍼보 만들어 보석 조합')
         btn2.clicked.connect(self.jewelry.jewelryCombineMain)
-        btn3 = QPushButton('통합 조합(F4)')
+        btn3 = QPushButton('통합 조합(F9)')
         btn3.clicked.connect(self.jewelry.jewelryCombineMain3)
-        btn4 = QPushButton('방 리셋(F5)')
+        btn4 = QPushButton('방 리셋(F10)')
         btn4.clicked.connect(self.room.TogetherMain)
-        btn5 = QPushButton('개별 방 리셋(F6)')
+        btn5 = QPushButton('개별 방 리셋(F11)')
         btn5.clicked.connect(self.room.EachMain)
         btn6 = QPushButton('종료')
         btn6.clicked.connect(QCoreApplication.instance().quit)
@@ -117,7 +116,7 @@ class MyApp(QWidget):
         right3.addWidget(self.rightRadio333)
         rightBox3.setLayout(right3)
 
-        rightGbox = QGroupBox('방 리셋 환경설정')
+        rightGbox = QGroupBox('개별방 리셋 환경설정')
         roomVbox = QVBoxLayout()
         roomVbox.addWidget(rightBox1)
         roomVbox.addWidget(rightBox2)
@@ -137,11 +136,14 @@ class MyApp(QWidget):
 
     def CenterRadioButtonClicked(self):
         if self.centerRadio1.isChecked():
-            print('100')
+            self.jewelry.SetMonitorSize(100)
+            self.room.SetMonitorSize(100)
         elif self.centerRadio11.isChecked():
-            print('125')
+            self.jewelry.SetMonitorSize(125)
+            self.room.SetMonitorSize(125)
         elif self.centerRadio111.isChecked():
-            print('150')
+            self.jewelry.SetMonitorSize(150)
+            self.room.SetMonitorSize(150)
 
     def RightRadioButtonClicked(self):
         if self.rightRadio1.isChecked():

@@ -17,6 +17,14 @@ g_l, g_t, g_w, g_h, hwnd = 0, 0, 0, 0, 0
 
 class Jewelry:
 
+    def __init__(self):
+
+        self.__monitorSize = 100
+        self.__adjustMonitorSize = {100:0, 125:.25, 150:.5}
+
+    def SetMonitorSize(self, size):
+        self.__monitorSize = size
+
     def findJewelryNum(self):
 
         jewelrysPos = []
@@ -27,12 +35,11 @@ class Jewelry:
             jewelrysPos.append([])
 
             if len(data) > 2:
-                print(jewelry, str(len(data)) + '개', '찾음')
                 for j in range(3 * (len(data) // 3)):
                     x, y = data[j]
                     jewelrysPos[i].append([x,y])
             else:
-                print(jewelry, str(3 - len(data)) + '개', '부족')
+                pass
 
         return jewelrysPos
         
@@ -81,14 +88,14 @@ class Jewelry:
                 if jewelryPos:
                     count = 0
                     for x, y in jewelryPos:
-                        inactiveMacro.LRightClick(hwnd, x, y)
+                        inactiveMacro.LRightClick(hwnd, x + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + int(y * self.__adjustMonitorSize[self.__monitorSize]))
                         count += 1
                         if count == 3:
-                            inactiveMacro.LeftClick(hwnd, combineBtn[0], combineBtn[1])
-                            inactiveMacro.LRightClick(hwnd, jewelryBox[0], jewelryBox[1])
-                            inactiveMacro.LeftClick(hwnd, combineBtn[0], combineBtn[1])
-                            inactiveMacro.LeftClick(hwnd, cubeCorner[0], cubeCorner[1])
-                            inactiveMacro.LeftClick(hwnd, jewelryBox[0], jewelryBox[1])
+                            inactiveMacro.LeftClick(hwnd, combineBtn[0] + int(combineBtn[1] * self.__adjustMonitorSize[self.__monitorSize]), combineBtn[1] + int(combineBtn[1] * self.__adjustMonitorSize[self.__monitorSize]))
+                            inactiveMacro.LRightClick(hwnd, jewelryBox[0] + int(jewelryBox[0] * self.__adjustMonitorSize[self.__monitorSize]), jewelryBox[1] + int(jewelryBox[1] * self.__adjustMonitorSize[self.__monitorSize]))
+                            inactiveMacro.LeftClick(hwnd, combineBtn[0] + int(combineBtn[1] * self.__adjustMonitorSize[self.__monitorSize]), combineBtn[1] + int(combineBtn[1] * self.__adjustMonitorSize[self.__monitorSize]))
+                            inactiveMacro.LeftClick(hwnd, cubeCorner[0] + int(cubeCorner[0] * self.__adjustMonitorSize[self.__monitorSize]), cubeCorner[1] + int(cubeCorner[1] * self.__adjustMonitorSize[self.__monitorSize]))
+                            inactiveMacro.LeftClick(hwnd, jewelryBox[0] + int(jewelryBox[0] * self.__adjustMonitorSize[self.__monitorSize]), jewelryBox[1]+  int(jewelryBox[1] * self.__adjustMonitorSize[self.__monitorSize]))
                             count = 0
         else:
             if not combineBtn:
@@ -104,13 +111,13 @@ class Jewelry:
         if combineBtn and cube and jewelryBox:
             for jewelryPos in jewelrysPos:
                 x, y = jewelryPos
-                inactiveMacro.LRightClick(hwnd, x, y)
+                inactiveMacro.LRightClick(hwnd, x + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + int(y * self.__adjustMonitorSize[self.__monitorSize]))
                 if flag:
-                    inactiveMacro.LRightClick(hwnd, jewelryBox[0], jewelryBox[1])
+                    inactiveMacro.LRightClick(hwnd, jewelryBox[0] + int(jewelryBox[0] * self.__adjustMonitorSize[self.__monitorSize]), jewelryBox[1] + int(jewelryBox[1] * self.__adjustMonitorSize[self.__monitorSize]))
                     flag = False
-                inactiveMacro.LeftClick(hwnd, combineBtn[0], combineBtn[1])
-            inactiveMacro.LeftClick(hwnd, cubeCorner[0], cubeCorner[1])
-            inactiveMacro.LeftClick(hwnd, jewelryBox[0], jewelryBox[1])
+                inactiveMacro.LeftClick(hwnd, combineBtn[0] + int(combineBtn[0] * self.__adjustMonitorSize[self.__monitorSize]), combineBtn[1] + int(combineBtn[1] * self.__adjustMonitorSize[self.__monitorSize]))
+            inactiveMacro.LeftClick(hwnd, cubeCorner[0] + int(cubeCorner[0] * self.__adjustMonitorSize[self.__monitorSize]), cubeCorner[1] + int(cubeCorner[1] * self.__adjustMonitorSize[self.__monitorSize]))
+            inactiveMacro.LeftClick(hwnd, jewelryBox[0] + int(jewelryBox[0] * self.__adjustMonitorSize[self.__monitorSize]), jewelryBox[1] + int(jewelryBox[1] * self.__adjustMonitorSize[self.__monitorSize]))
         else:
             if not combineBtn:
                 print('조합버튼을 찾기 못했습니다.')
@@ -144,7 +151,7 @@ class Jewelry:
             g_l, g_t, g_w, g_h = inactiveMacro.GetWindowRect(hwnd)
             combineBtn, cube, jewelryBox, cubeCorner = self.findEtc()
             jewelrysPos = self.findJewelryNum()
-            moveFindedJewelry(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner)
+            self.moveFindedJewelry(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner)
         except:
             print('디아블로가 실행되어 있지 않습니다.')
 
@@ -156,7 +163,7 @@ class Jewelry:
             g_l, g_t, g_w, g_h = inactiveMacro.GetWindowRect(hwnd)
             combineBtn, cube, jewelryBox, cubeCorner = self.findEtc()
             jewelrysPos = self.findJewelryNum2()
-            moveFindedJewelry2(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner)
+            self.moveFindedJewelry2(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner)
         except:
             print('디아블로가 실행되어 있지 않습니다.')
 
@@ -170,7 +177,7 @@ class Jewelry:
             jewelrysPos = self.findJewelryNum()
             jewelrysPos2 = self.findJewelryNum2()
             jewelrysPos3 = self.findJewelryNum3(jewelrysPos, jewelrysPos2)
-            moveFindedJewelry(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner)
-            moveFindedJewelry2(jewelrysPos3, combineBtn, cube, jewelryBox, cubeCorner)
+            self.moveFindedJewelry(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner)
+            self.moveFindedJewelry2(jewelrysPos3, combineBtn, cube, jewelryBox, cubeCorner)
         except:
             print('디아블로가 실행되어 있지 않습니다.')

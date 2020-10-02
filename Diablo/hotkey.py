@@ -11,15 +11,12 @@ def handlePress( key ):
     pass
  
 def handleRelease( key ):
-    if key == Key.f2:
-        jewelry.jewelryCombineMain2()
-    if key == Key.f3:
-        jewelry.jewelryCombineMain()
-    if key == Key.f4:
+    keyClick = str(key)
+    if key == Key.f9:
         jewelry.jewelryCombineMain3()
-    if key == Key.f5:
-        room.TogtherMain()
-    if key == Key.f6:
+    if key == Key.f10:
+        room.TogetherMain()
+    if key == Key.f11:
         room.EachMain()
  
 def execute():
