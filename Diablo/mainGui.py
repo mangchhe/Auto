@@ -9,13 +9,15 @@ from room import Room
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QCoreApplication, Qt
+from PyQt5.QtCore import QCoreApplication, Qt, QSize, QRect
+
 
 class MyApp(QWidget):
 
     def __init__(self):
+
         super().__init__()
-        
+    
         hotkeyMain()
         self.room = Room()
         self.jewelry = Jewelry()
@@ -48,35 +50,54 @@ class MyApp(QWidget):
 
         leftBox = QVBoxLayout()
         leftBox.addLayout(leftTop)
-
         leftBox1.setLayout(leftBox)
+
+        centerBox1 = QGroupBox('텍스트, 앱 크기 비율')
+        self.centerRadio1 = QRadioButton('100%')
+        self.centerRadio1.setChecked(True)
+        self.centerRadio1.clicked.connect(self.CenterRadioButtonClicked)
+        self.centerRadio11 = QRadioButton('125%')
+        self.centerRadio11.clicked.connect(self.CenterRadioButtonClicked)
+        self.centerRadio111 = QRadioButton('150%')
+        self.centerRadio111.clicked.connect(self.CenterRadioButtonClicked)
+
+        center1 = QHBoxLayout()
+        center1.addWidget(self.centerRadio1)
+        center1.addWidget(self.centerRadio11)
+        center1.addWidget(self.centerRadio111)
+        centerBox1.setLayout(center1)
+
+        centerGbox = QGroupBox('컴퓨터 환경설정')
+        computerVbox = QVBoxLayout()
+        computerVbox.addWidget(centerBox1)
+        centerGbox.setLayout(computerVbox)
 
         rightBox1 = QGroupBox('D2Loader')
         self.rightRadio1 = QRadioButton('노말')
         self.rightRadio1.setChecked(True)
-        self.rightRadio1.clicked.connect(self.RadioButtonClicked)
+        self.rightRadio1.clicked.connect(self.RightRadioButtonClicked)
         self.rightRadio11 = QRadioButton('나이트메어')
-        self.rightRadio11.clicked.connect(self.RadioButtonClicked)
+        self.rightRadio11.clicked.connect(self.RightRadioButtonClicked)
         self.rightRadio111 = QRadioButton('헬')
-        self.rightRadio111.clicked.connect(self.RadioButtonClicked)
+        self.rightRadio111.clicked.connect(self.RightRadioButtonClicked)
         
         rightBox2 = QGroupBox('D2Loader2')
         self.rightRadio2 = QRadioButton('노말')
         self.rightRadio2.setChecked(True)
-        self.rightRadio2.clicked.connect(self.RadioButtonClicked2)
+        self.rightRadio2.clicked.connect(self.RightRadioButtonClicked2)
         self.rightRadio22 = QRadioButton('나이트메어')
-        self.rightRadio22.clicked.connect(self.RadioButtonClicked2)
+        self.rightRadio22.clicked.connect(self.RightRadioButtonClicked2)
         self.rightRadio222 = QRadioButton('헬')
-        self.rightRadio222.clicked.connect(self.RadioButtonClicked2)
+        self.rightRadio222.clicked.connect(self.RightRadioButtonClicked2)
 
         rightBox3 = QGroupBox('D2Loader3')
         self.rightRadio3 = QRadioButton('노말')
         self.rightRadio3.setChecked(True)
-        self.rightRadio3.clicked.connect(self.RadioButtonClicked3)
+        self.rightRadio3.clicked.connect(self.RightRadioButtonClicked3)
         self.rightRadio33 = QRadioButton('나이트메어')
-        self.rightRadio33.clicked.connect(self.RadioButtonClicked3)
+        self.rightRadio33.clicked.connect(self.RightRadioButtonClicked3)
         self.rightRadio333 = QRadioButton('헬')
-        self.rightRadio333.clicked.connect(self.RadioButtonClicked3)
+        self.rightRadio333.clicked.connect(self.RightRadioButtonClicked3)
 
         right1 = QHBoxLayout()
         right1.addWidget(self.rightRadio1)
@@ -105,16 +126,24 @@ class MyApp(QWidget):
 
         layout = QGridLayout()
 
-        layout.addWidget(leftBox1, 0, 0)
-        layout.addWidget(rightGbox, 0, 1)
+        layout.addWidget(leftBox1, 0, 0, 3, 1)
+        layout.addWidget(centerGbox, 0, 1)
+        layout.addWidget(rightGbox, 0, 2, 3, 1)
         
         self.setLayout(layout)
         self.setWindowTitle('디아블로 매크로')
         self.setWindowIcon(QIcon('diablo_favicon.ico'))
-        self.setGeometry(300, 300, 300, 200)
         self.show()
 
-    def RadioButtonClicked(self):
+    def CenterRadioButtonClicked(self):
+        if self.centerRadio1.isChecked():
+            print('100')
+        elif self.centerRadio11.isChecked():
+            print('125')
+        elif self.centerRadio111.isChecked():
+            print('150')
+
+    def RightRadioButtonClicked(self):
         if self.rightRadio1.isChecked():
             self.room.setDifficulty('normal')
         elif self.rightRadio11.isChecked():
@@ -122,7 +151,7 @@ class MyApp(QWidget):
         elif self.rightRadio111.isChecked():
             self.room.setDifficulty('hell')
 
-    def RadioButtonClicked2(self):
+    def RightRadioButtonClicked2(self):
         if self.rightRadio2.isChecked():
             self.room.setDifficulty2('normal')
         elif self.rightRadio22.isChecked():
@@ -130,7 +159,7 @@ class MyApp(QWidget):
         elif self.rightRadio222.isChecked():
             self.room.setDifficulty2('hell')
 
-    def RadioButtonClicked3(self):
+    def RightRadioButtonClicked3(self):
         if self.rightRadio3.isChecked():
             self.room.setDifficulty3('normal')
         elif self.rightRadio33.isChecked():
@@ -140,5 +169,7 @@ class MyApp(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+
     ex = MyApp()
+    
     sys.exit(app.exec_())

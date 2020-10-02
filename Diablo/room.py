@@ -145,7 +145,7 @@ class Room:
     def EachFirstWindow(self, text):
         g_l, g_t, g_w, g_h = GetWindowRect(self.__hwnd)
         ClickText(self.__hwnd, '\x1b')
-        LeftClick(self.__hwnd, (g_w - g_l) // 2, (g_h - g_t) // 2)
+        LeftClick(self.__hwnd, (g_w - g_l) // 2, (g_h - g_t) // 2 - 30)
         x, y = ImagePosExtract(self.__hwnd, 'img/room/make.PNG')
         LeftClick(self.__hwnd, x, y)
         x, y = ImagePosExtract(self.__hwnd, 'img/room/gameName.PNG')
@@ -209,10 +209,13 @@ class Room:
 
         if self.__monitors == 1:
             thread = threading.Thread(target=self.EachFirstWindow, args=(roomName,))
+            thread.daemon = True
             thread.start()
         elif self.__monitors == 2:
             thread = threading.Thread(target=self.EachFirstWindow, args=(roomName,))
             thread2 = threading.Thread(target=self.EachSecondWindow, args=(roomName2,))
+            thread.daemon = True
+            thread2.daemon = True
             thread.start()
             thread2.start()
         elif self.__monitors == 3:
