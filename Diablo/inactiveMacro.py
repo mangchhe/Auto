@@ -155,3 +155,47 @@ def ImagePosExtract(handle, path):
         break
 
     return imgPos
+
+def RepeatImagePosExtract(handle, path):
+    left, top, right, bot = win32gui.GetWindowRect(handle)
+    w = right - left
+    h = bot - top
+
+    hwndDC = win32gui.GetWindowDC(handle)
+    mfcDC  = win32ui.CreateDCFromHandle(hwndDC)
+    saveDC = mfcDC.CreateCompatibleDC()
+
+    saveBitMap = win32ui.CreateBitmap()
+    saveBitMap.CreateCompatibleBitmap(mfcDC, w, h)
+
+    saveDC.SelectObject(saveBitMap)
+
+    result = windll.user32.PrintWindow(handle, saveDC.GetSafeHdc(), 0)
+
+    bmpinfo = saveBitMap.GetInfo()
+    bmpstr = saveBitMap.GetBitmapBits(True)
+
+    im = Image.frombuffer(
+        'RGB',
+        (bmpinfo['bmWidth'], bmpinfo['bmHeight']),
+        bmpstr, 'raw', 'BGRX', 0, 1)
+
+    win32gui.DeleteObject(saveBitMap.GetHandle())
+    saveDC.DeleteDC()
+    mfcDC.DeleteDC()
+    win32gui.ReleaseDC(handle, hwndDC)
+
+    img_rgb = np.array(im)
+    img_rgb = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2RGB)
+    template = cv2.imread(path)
+    w, h = template.shape[:-1]
+
+    res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+    threshold = .95
+    loc = np.where(res >= threshold)
+    imgPos = []
+
+    for pt in zip(*loc[::-1]):  # Switch collumns and rows
+        imgPos.append(pt[0] + h//2)
+        imgPos.append(pt[1] + w//2)
+        break

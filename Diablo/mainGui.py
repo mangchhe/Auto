@@ -4,7 +4,7 @@
 import sys
 
 from jewelry import Jewelry
-from hotkey import hotkeyMain
+from hotkey import Hotkey
 from room import Room
 
 from PyQt5.QtWidgets import *
@@ -16,10 +16,12 @@ class MyApp(QWidget):
     def __init__(self):
 
         super().__init__()
-    
-        hotkeyMain()
+
         self.room = Room()
         self.jewelry = Jewelry()
+        hotkey = Hotkey(self.jewelry, self.room)
+        hotkey.hotkeyMain()
+        
         self.initUI()
 
     def initUI(self):

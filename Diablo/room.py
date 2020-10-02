@@ -24,7 +24,8 @@ class Room:
         self.__roomName = ''
         self.__roomName2 = ''
         self.__roomName3 = ''
-        self.__difficultyPos = {'normal':-30, 'nightmare':-45, 'hell':-25}
+        self.__difficultyXPos = {100:{'normal':-30, 'nightmare':-45, 'hell':-25}, 125:{'normal':-40, 'nightmare':-55, 'hell':-35}, 150:{'normal':-45, 'nightmare':-75, 'hell':-35}}
+        self.__difficultyYPos = {100:{'normal':0, 'nightmare':0, 'hell':0}, 125:{'normal':0, 'nightmare':0, 'hell':0}, 150:{'normal':-10, 'nightmare':-10, 'hell':-10}}
         self.__monitorSize = 100
         self.__adjustMonitorSize = {100:0, 125:.25, 150:.5}
         self.__adjustMonitorSize2 = {100:0, 125:-30, 150:-50}
@@ -70,7 +71,7 @@ class Room:
         DoubleLeftClick(self.__hwnd, x + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + 20 + int(y * self.__adjustMonitorSize[self.__monitorSize]))
         TypingTexts(self.__hwnd, text)
         x, y = ImagePosExtract(self.__hwnd, 'img/room/' + self.__difficulty + '.PNG')
-        LeftClick(self.__hwnd, x + self.__difficultyPos[self.__difficulty] + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + int(y * self.__adjustMonitorSize[self.__monitorSize]))
+        LeftClick(self.__hwnd, x + self.__difficultyXPos[self.__monitorSize][self.__difficulty] + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + int(y * self.__adjustMonitorSize[self.__monitorSize]) + self.__difficultyYPos[self.__monitorSize][self.__difficulty])
         self.End()
 
     def SecondWindow(self, text):
@@ -162,7 +163,7 @@ class Room:
         DoubleLeftClick(self.__hwnd, x + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + 20 + int(y * self.__adjustMonitorSize[self.__monitorSize]))
         TypingTexts(self.__hwnd, text)
         x, y = ImagePosExtract(self.__hwnd, 'img/room/' + self.__difficulty + '.PNG')
-        LeftClick(self.__hwnd, x + self.__difficultyPos[self.__difficulty] + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + int(y * self.__adjustMonitorSize[self.__monitorSize]))
+        LeftClick(self.__hwnd, x + self.__difficultyXPos[self.__monitorSize][self.__difficulty] + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + int(y * self.__adjustMonitorSize[self.__monitorSize]) + self.__difficultyYPos[self.__monitorSize][self.__difficulty] )
         x, y = ImagePosExtract(self.__hwnd, 'img/room/gameMake.PNG')
         LeftClick(self.__hwnd, x + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + int(y * self.__adjustMonitorSize[self.__monitorSize]))
 
@@ -177,7 +178,7 @@ class Room:
         DoubleLeftClick(self.__hwnd2, x + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + 20 + int(y * self.__adjustMonitorSize[self.__monitorSize]))
         TypingTexts(self.__hwnd2, text)
         x, y = ImagePosExtract(self.__hwnd2, 'img/room/' + self.__difficulty2 + '.PNG')
-        LeftClick(self.__hwnd2, x + self.__difficultyPos[self.__difficulty2] + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + int(y * self.__adjustMonitorSize[self.__monitorSize]))
+        LeftClick(self.__hwnd2, x + self.__difficultyXPos[self.__monitorSize][self.__difficulty2] + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + int(y * self.__adjustMonitorSize[self.__monitorSize]) + self.__difficultyYPos[self.__monitorSize][self.__difficulty2])
         x, y = ImagePosExtract(self.__hwnd2, 'img/room/gameMake.PNG')
         LeftClick(self.__hwnd2, x + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + int(y * self.__adjustMonitorSize[self.__monitorSize]))
 
@@ -192,7 +193,7 @@ class Room:
         DoubleLeftClick(self.__hwnd3, x + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + 20 + int(y * self.__adjustMonitorSize[self.__monitorSize]))
         TypingTexts(self.__hwnd3, text)
         x, y = ImagePosExtract(self.__hwnd3, 'img/room/' + self.__difficulty3 + '.PNG')
-        LeftClick(self.__hwnd3, x + self.__difficultyPos[self.__difficulty3] + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + int(y * self.__adjustMonitorSize[self.__monitorSize]))
+        LeftClick(self.__hwnd3, x + self.__difficultyXPos[self.__monitorSize][self.__difficulty3] + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + int(y * self.__adjustMonitorSize[self.__monitorSize]) + self.__difficultyYPos[self.__monitorSize][self.__difficulty3])
         x, y = ImagePosExtract(self.__hwnd3, 'img/room/gameMake.PNG')
         LeftClick(self.__hwnd3, x + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + int(y * self.__adjustMonitorSize[self.__monitorSize]))
 
