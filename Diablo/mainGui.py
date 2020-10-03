@@ -26,11 +26,11 @@ class MyApp(QWidget):
 
     def initUI(self):
 
-        btn = QPushButton('보석 낱개 조합')
+        btn = QPushButton('보석 낱개 조합(F9)')
         btn.clicked.connect(self.jewelry.jewelryCombineMain2)
         btn2 = QPushButton('퍼보 만들어 보석 조합')
         btn2.clicked.connect(self.jewelry.jewelryCombineMain)
-        btn3 = QPushButton('통합 조합(F9)')
+        btn3 = QPushButton('통합 조합')
         btn3.clicked.connect(self.jewelry.jewelryCombineMain3)
         btn4 = QPushButton('방 리셋(F10)')
         btn4.clicked.connect(self.room.TogetherMain)
@@ -73,7 +73,10 @@ class MyApp(QWidget):
         computerVbox.addWidget(centerBox1)
         centerGbox.setLayout(computerVbox)
 
-        rightBox1 = QGroupBox('D2Loader')
+        self.rightBox1 = QGroupBox('D2Loader')
+        self.rightBox1.setCheckable(True)
+        self.rightBox1.setChecked(False)
+        self.rightBox1.clicked.connect(self.RightBoxClicked)
         self.rightRadio1 = QRadioButton('노말')
         self.rightRadio1.setChecked(True)
         self.rightRadio1.clicked.connect(self.RightRadioButtonClicked)
@@ -82,7 +85,10 @@ class MyApp(QWidget):
         self.rightRadio111 = QRadioButton('헬')
         self.rightRadio111.clicked.connect(self.RightRadioButtonClicked)
         
-        rightBox2 = QGroupBox('D2Loader2')
+        self.rightBox2 = QGroupBox('D2Loader2')
+        self.rightBox2.setCheckable(True)
+        self.rightBox2.setChecked(False)
+        self.rightBox2.clicked.connect(self.RightBoxClicked)
         self.rightRadio2 = QRadioButton('노말')
         self.rightRadio2.setChecked(True)
         self.rightRadio2.clicked.connect(self.RightRadioButtonClicked2)
@@ -91,7 +97,10 @@ class MyApp(QWidget):
         self.rightRadio222 = QRadioButton('헬')
         self.rightRadio222.clicked.connect(self.RightRadioButtonClicked2)
 
-        rightBox3 = QGroupBox('D2Loader3')
+        self.rightBox3 = QGroupBox('D2Loader3')
+        self.rightBox3.setCheckable(True)
+        self.rightBox3.setChecked(False)
+        self.rightBox3.clicked.connect(self.RightBoxClicked)
         self.rightRadio3 = QRadioButton('노말')
         self.rightRadio3.setChecked(True)
         self.rightRadio3.clicked.connect(self.RightRadioButtonClicked3)
@@ -104,25 +113,25 @@ class MyApp(QWidget):
         right1.addWidget(self.rightRadio1)
         right1.addWidget(self.rightRadio11)
         right1.addWidget(self.rightRadio111)
-        rightBox1.setLayout(right1)
+        self.rightBox1.setLayout(right1)
 
         right2 = QHBoxLayout()
         right2.addWidget(self.rightRadio2)
         right2.addWidget(self.rightRadio22)
         right2.addWidget(self.rightRadio222)
-        rightBox2.setLayout(right2)
+        self.rightBox2.setLayout(right2)
 
         right3 = QHBoxLayout()
         right3.addWidget(self.rightRadio3)
         right3.addWidget(self.rightRadio33)
         right3.addWidget(self.rightRadio333)
-        rightBox3.setLayout(right3)
+        self.rightBox3.setLayout(right3)
 
         rightGbox = QGroupBox('개별방 리셋 환경설정')
         roomVbox = QVBoxLayout()
-        roomVbox.addWidget(rightBox1)
-        roomVbox.addWidget(rightBox2)
-        roomVbox.addWidget(rightBox3)
+        roomVbox.addWidget(self.rightBox1)
+        roomVbox.addWidget(self.rightBox2)
+        roomVbox.addWidget(self.rightBox3)
         rightGbox.setLayout(roomVbox)
 
         layout = QGridLayout()
@@ -170,6 +179,17 @@ class MyApp(QWidget):
             self.room.setDifficulty3('nightmare')
         elif self.rightRadio333.isChecked():
             self.room.setDifficulty3('hell')
+
+    def RightBoxClicked(self):
+        onMonitors = []
+        if self.rightBox1.isChecked():
+            onMonitors.append('first')
+        if self.rightBox2.isChecked():
+            onMonitors.append('second')
+        if self.rightBox3.isChecked():
+            onMonitors.append('third')
+
+        self.room.SetOnMonitors(onMonitors)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

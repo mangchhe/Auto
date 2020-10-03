@@ -23,18 +23,16 @@ def MouseMove(handle, x, y):
     win32api.SendMessage(handle, win32con.WM_MOUSEMOVE, 0, lparam)
 
 def LeftClick(handle, x, y):
-    time.sleep(.15)
-    MouseMove(handle, x, y)
-    time.sleep(.15)
     y -= 28
+    time.sleep(.15)
     lparam = win32api.MAKELONG(x, y)
     win32api.SendMessage(handle, win32con.WM_LBUTTONDOWN, 0, lparam) 
     time.sleep(.15)
     win32api.SendMessage(handle, win32con.WM_LBUTTONUP, 0, lparam)
 
 def DoubleLeftClick(handle, x, y):
-    MouseMove(handle, x, y)
     y -= 28
+    time.sleep(.15)
     lparam = win32api.MAKELONG(x, y)
     win32api.SendMessage(handle, win32con.WM_LBUTTONDOWN, 0, lparam) 
     win32api.SendMessage(handle, win32con.WM_LBUTTONUP, 0, lparam)
@@ -42,11 +40,12 @@ def DoubleLeftClick(handle, x, y):
     win32api.SendMessage(handle, win32con.WM_LBUTTONUP, 0, lparam)
 
 def RightClick(handle, x, y):
+    y -= 28
     time.sleep(.15)
     lparam = win32api.MAKELONG(x, y)
-    win32api.SendMessage(handle, win32con.WM_RBUTTONDOWN, 0, lparam) 
+    win32api.SendMessage(handle, win32con.WM_RBUTTONDOWN, win32con.MK_RBUTTON, lparam) 
     time.sleep(.15)
-    win32api.SendMessage(handle, win32con.WM_RBUTTONUP, 0, lparam)
+    win32api.SendMessage(handle, win32con.WM_RBUTTONUP, win32con.MK_RBUTTON, lparam)
 
 def LRightClick(handle, x, y):
     LeftClick(handle, x, y)
@@ -55,6 +54,7 @@ def LRightClick(handle, x, y):
 def ClickText(handle, text):
     time.sleep(.15)
     win32api.SendMessage(handle, win32con.WM_KEYDOWN, ord(text), 0)
+    time.sleep(.15)
     win32api.SendMessage(handle, win32con.WM_KEYUP, ord(text), 0)
 
 def TypingText(handle, text):

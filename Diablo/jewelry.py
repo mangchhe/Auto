@@ -18,12 +18,25 @@ g_l, g_t, g_w, g_h, hwnd = 0, 0, 0, 0, 0
 class Jewelry:
 
     def __init__(self):
-
         self.__monitorSize = 100
         self.__adjustMonitorSize = {100:0, 125:.25, 150:.5}
+        self.combineBtn = []
+        self.cube = []
+        self.jewelryBox = []
+        self.cubeCorner = []
+        self.adjustCombineBtn = [0, 0]
+        self.adjustJewelryBox = [0, 0]
+        self.adjustCubeCorner = [0, 0]
+        self.adjustCube = [0, 0]
 
     def SetMonitorSize(self, size):
         self.__monitorSize = size
+        
+    def SetPosThroughMonitor(self):
+        self.adjustCube = [int(self.cube[0] * self.__adjustMonitorSize[self.__monitorSize]), int(self.cube[1] * self.__adjustMonitorSize[self.__monitorSize])]
+        self.adjustCombineBtn = [int(self.combineBtn[0] * self.__adjustMonitorSize[self.__monitorSize]), int(self.combineBtn[1] * self.__adjustMonitorSize[self.__monitorSize])]
+        self.adjustJewelryBox = [int(self.jewelryBox[0] * self.__adjustMonitorSize[self.__monitorSize]), int(self.jewelryBox[1] * self.__adjustMonitorSize[self.__monitorSize])]
+        self.adjustCubeCorner = [int(self.cubeCorner[0] * self.__adjustMonitorSize[self.__monitorSize]), int(self.cubeCorner[1] * self.__adjustMonitorSize[self.__monitorSize])]
 
     def findJewelryNum(self):
 
@@ -70,20 +83,20 @@ class Jewelry:
         @return 큐브, 조합버튼 위치
     """
     def findEtc(self):
+        inactiveMacro.ClickText(hwnd, 'I')
+        self.cube = inactiveMacro.ImagePosExtract(hwnd, 'img/boxs/cube.PNG')
+        self.jewelryBox = inactiveMacro.ImagePosExtract(hwnd, 'img/boxs/jewelryBox.PNG')
+        inactiveMacro.RightClick(hwnd, self.cube[0] + self.adjustCube[0], self.cube[1] + self.adjustCube[1])
 
-        combineBtn = inactiveMacro.ImagePosExtract(hwnd, 'img/function/combine.PNG')
-        cube = inactiveMacro.ImagePosExtract(hwnd, 'img/boxs/cube.PNG')
-        jewelryBox = inactiveMacro.ImagePosExtract(hwnd, 'img/boxs/jewelryBox.PNG')
-        cubeCorner = inactiveMacro.ImagePosExtract(hwnd, 'img/etc/cubeCorner.PNG')
-
-        return combineBtn, cube, jewelryBox, cubeCorner
-
+    def findEtc2(self):
+        self.combineBtn = inactiveMacro.ImagePosExtract(hwnd, 'img/function/combine.PNG')
+        self.cubeCorner = inactiveMacro.ImagePosExtract(hwnd, 'img/etc/cubeCorner.PNG')
     """
         쥬얼 합성
     """
-    def moveFindedJewelry(self, jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner):
+    def moveFindedJewelry(self, jewelrysPos):
 
-        if combineBtn and cube and jewelryBox:
+        if self.combineBtn and self.cube and self.jewelryBox:
             for jewelryPos in jewelrysPos:
                 if jewelryPos:
                     count = 0
@@ -91,39 +104,39 @@ class Jewelry:
                         inactiveMacro.LRightClick(hwnd, x + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + int(y * self.__adjustMonitorSize[self.__monitorSize]))
                         count += 1
                         if count == 3:
-                            inactiveMacro.LeftClick(hwnd, combineBtn[0] + int(combineBtn[1] * self.__adjustMonitorSize[self.__monitorSize]), combineBtn[1] + int(combineBtn[1] * self.__adjustMonitorSize[self.__monitorSize]))
-                            inactiveMacro.LRightClick(hwnd, jewelryBox[0] + int(jewelryBox[0] * self.__adjustMonitorSize[self.__monitorSize]), jewelryBox[1] + int(jewelryBox[1] * self.__adjustMonitorSize[self.__monitorSize]))
-                            inactiveMacro.LeftClick(hwnd, combineBtn[0] + int(combineBtn[1] * self.__adjustMonitorSize[self.__monitorSize]), combineBtn[1] + int(combineBtn[1] * self.__adjustMonitorSize[self.__monitorSize]))
-                            inactiveMacro.LeftClick(hwnd, cubeCorner[0] + int(cubeCorner[0] * self.__adjustMonitorSize[self.__monitorSize]), cubeCorner[1] + int(cubeCorner[1] * self.__adjustMonitorSize[self.__monitorSize]))
-                            inactiveMacro.LeftClick(hwnd, jewelryBox[0] + int(jewelryBox[0] * self.__adjustMonitorSize[self.__monitorSize]), jewelryBox[1]+  int(jewelryBox[1] * self.__adjustMonitorSize[self.__monitorSize]))
+                            inactiveMacro.LeftClick(hwnd, self.combineBtn[0] + self.adjustCombineBtn[0], self.combineBtn[1] + self.adjustCombineBtn[1])
+                            inactiveMacro.LRightClick(hwnd, self.jewelryBox[0] + self.adjustJewelryBox[0], self.jewelryBox[1] + self.adjustJewelryBox[1])
+                            inactiveMacro.LeftClick(hwnd, self.combineBtn[0] + self.adjustCombineBtn[0], self.combineBtn[1] + self.adjustCombineBtn[1])
+                            inactiveMacro.LeftClick(hwnd, self.cubeCorner[0] + self.adjustCubeCorner[0], self.cubeCorner[1] + self.adjustCubeCorner[1])
+                            inactiveMacro.LeftClick(hwnd, self.jewelryBox[0] + self.adjustJewelryBox[0], self.jewelryBox[1] + self.adjustJewelryBox[1])
                             count = 0
         else:
-            if not combineBtn:
+            if not self.combineBtn:
                 print('조합버튼을 찾기 못했습니다.')
-            if not cube:
+            if not self.cube:
                 print('큐브를 찾기 못했습니다.')
-            if not jewelryBox:
+            if not self.jewelryBox:
                 print('보석상자를 찾기 못했습니다.')
 
-    def moveFindedJewelry2(self, jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner):
+    def moveFindedJewelry2(self, jewelrysPos):
 
         flag = True
-        if combineBtn and cube and jewelryBox:
+        if self.combineBtn and self.cube and self.jewelryBox:
             for jewelryPos in jewelrysPos:
                 x, y = jewelryPos
                 inactiveMacro.LRightClick(hwnd, x + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + int(y * self.__adjustMonitorSize[self.__monitorSize]))
                 if flag:
-                    inactiveMacro.LRightClick(hwnd, jewelryBox[0] + int(jewelryBox[0] * self.__adjustMonitorSize[self.__monitorSize]), jewelryBox[1] + int(jewelryBox[1] * self.__adjustMonitorSize[self.__monitorSize]))
+                    inactiveMacro.LRightClick(hwnd, self.jewelryBox[0] + self.adjustJewelryBox[0], self.jewelryBox[1] + self.adjustJewelryBox[1])
                     flag = False
-                inactiveMacro.LeftClick(hwnd, combineBtn[0] + int(combineBtn[0] * self.__adjustMonitorSize[self.__monitorSize]), combineBtn[1] + int(combineBtn[1] * self.__adjustMonitorSize[self.__monitorSize]))
-            inactiveMacro.LeftClick(hwnd, cubeCorner[0] + int(cubeCorner[0] * self.__adjustMonitorSize[self.__monitorSize]), cubeCorner[1] + int(cubeCorner[1] * self.__adjustMonitorSize[self.__monitorSize]))
-            inactiveMacro.LeftClick(hwnd, jewelryBox[0] + int(jewelryBox[0] * self.__adjustMonitorSize[self.__monitorSize]), jewelryBox[1] + int(jewelryBox[1] * self.__adjustMonitorSize[self.__monitorSize]))
+                inactiveMacro.LeftClick(hwnd, self.combineBtn[0] + self.adjustCombineBtn[0], self.combineBtn[1] + self.adjustCombineBtn[1])
+            inactiveMacro.LeftClick(hwnd, self.cubeCorner[0] + self.adjustCubeCorner[0], self.cubeCorner[1] + self.adjustCubeCorner[1])
+            inactiveMacro.LeftClick(hwnd, self.jewelryBox[0] + self.adjustJewelryBox[0], self.jewelryBox[1] + self.adjustJewelryBox[1])
         else:
-            if not combineBtn:
+            if not self.combineBtn:
                 print('조합버튼을 찾기 못했습니다.')
-            if not cube:
+            if not self.cube:
                 print('큐브를 찾기 못했습니다.')
-            if not jewelryBox:
+            if not self.jewelryBox:
                 print('보석상자를 찾기 못했습니다.')
 
     """
@@ -146,26 +159,24 @@ class Jewelry:
 
     def execute(self):
         global g_l, g_t, g_w, g_h, hwnd
-        try:
-            hwnd = inactiveMacro.GetHandleName('D2Loader')
-            g_l, g_t, g_w, g_h = inactiveMacro.GetWindowRect(hwnd)
-            combineBtn, cube, jewelryBox, cubeCorner = self.findEtc()
-            jewelrysPos = self.findJewelryNum()
-            self.moveFindedJewelry(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner)
-        except:
-            print('디아블로가 실행되어 있지 않습니다.')
+        hwnd = inactiveMacro.GetHandleName('D2Loader')
+        g_l, g_t, g_w, g_h = inactiveMacro.GetWindowRect(hwnd)
+        self.findEtc()
+        self.findEtc2()
+        self.SetPosThroughMonitor()
+        jewelrysPos = self.findJewelryNum()
+        self.moveFindedJewelry(jewelrysPos)
 
     def execute2(self):
         global g_l, g_t, g_w, g_h, hwnd
 
-        try:
-            hwnd = inactiveMacro.GetHandleName('D2Loader')
-            g_l, g_t, g_w, g_h = inactiveMacro.GetWindowRect(hwnd)
-            combineBtn, cube, jewelryBox, cubeCorner = self.findEtc()
-            jewelrysPos = self.findJewelryNum2()
-            self.moveFindedJewelry2(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner)
-        except:
-            print('디아블로가 실행되어 있지 않습니다.')
+        hwnd = inactiveMacro.GetHandleName('D2Loader')
+        g_l, g_t, g_w, g_h = inactiveMacro.GetWindowRect(hwnd)
+        self.findEtc()
+        self.findEtc2()
+        self.SetPosThroughMonitor()
+        jewelrysPos = self.findJewelryNum2()
+        self.moveFindedJewelry2(jewelrysPos)
 
     def execute3(self):
         global g_l, g_t, g_w, g_h, hwnd
@@ -173,11 +184,13 @@ class Jewelry:
         try:
             hwnd = inactiveMacro.GetHandleName('D2Loader')
             g_l, g_t, g_w, g_h = inactiveMacro.GetWindowRect(hwnd)
-            combineBtn, cube, jewelryBox, cubeCorner = self.findEtc()
+            self.findEtc()
+            self.findEtc2()
+            self.SetPosThroughMonitor()
             jewelrysPos = self.findJewelryNum()
             jewelrysPos2 = self.findJewelryNum2()
             jewelrysPos3 = self.findJewelryNum3(jewelrysPos, jewelrysPos2)
-            self.moveFindedJewelry(jewelrysPos, combineBtn, cube, jewelryBox, cubeCorner)
-            self.moveFindedJewelry2(jewelrysPos3, combineBtn, cube, jewelryBox, cubeCorner)
+            self.moveFindedJewelry(jewelrysPos)
+            self.moveFindedJewelry2(jewelrysPos3)
         except:
             print('디아블로가 실행되어 있지 않습니다.')

@@ -29,6 +29,10 @@ class Room:
         self.__monitorSize = 100
         self.__adjustMonitorSize = {100:0, 125:.25, 150:.5}
         self.__adjustMonitorSize2 = {100:0, 125:-30, 150:-50}
+        self.__onMonitors = []
+
+    def SetOnMonitors(self, onMonitors):
+        self.__onMonitors = onMonitors
 
     def SetMonitorSize(self, size):
         self.__monitorSize = size
@@ -189,7 +193,7 @@ class Room:
         time.sleep(3)
         x, y = ImagePosExtract(self.__hwnd3, 'img/room/make.PNG')
         LeftClick(self.__hwnd3, x + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + int(y * self.__adjustMonitorSize[self.__monitorSize]))
-        x, y = ImagePosExtract(self.__hwnd, 'img/room/gameName.PNG')
+        x, y = ImagePosExtract(self.__hwnd3, 'img/room/gameName.PNG')
         DoubleLeftClick(self.__hwnd3, x + int(x * self.__adjustMonitorSize[self.__monitorSize]), y + 20 + int(y * self.__adjustMonitorSize[self.__monitorSize]))
         TypingTexts(self.__hwnd3, text)
         x, y = ImagePosExtract(self.__hwnd3, 'img/room/' + self.__difficulty3 + '.PNG')
@@ -202,8 +206,6 @@ class Room:
         self.__hwnd = GetHandleName('D2Loader')
         self.__hwnd2 = GetHandleName('D2Loader2')
         self.__hwnd3 = GetHandleName('D2Loader3')
-
-        self.__monitors = len(list(filter(lambda x : x != 0, [self.__hwnd, self.__hwnd2, self.__hwnd3])))
 
         if self.__startEach:
             self.__roomName = self.CreateRoomTitle()
@@ -220,26 +222,17 @@ class Room:
             roomName3 = self.__roomName3 + str(self.__countEach)
             self.__countEach += 1
 
-        if self.__monitors == 1:
-            thread = threading.Thread(target=self.EachFirstWindow, args=(roomName,))
-            thread.daemon = True
-            thread.start()
-        elif self.__monitors == 2:
-            thread = threading.Thread(target=self.EachFirstWindow, args=(roomName,))
-            thread2 = threading.Thread(target=self.EachSecondWindow, args=(roomName2,))
-            thread.daemon = True
-            thread2.daemon = True
-            thread.start()
-            thread2.start()
-        elif self.__monitors == 3:
-            thread = threading.Thread(target=self.EachFirstWindow, args=(roomName,))
-            thread2 = threading.Thread(target=self.EachSecondWindow, args=(roomName2,))
-            thread3 = threading.Thread(target=self.EachThirdWindow, args=(roomName3,))
-            thread.daemon = True
-            thread2.daemon = True
-            thread3.daemon = True
-            thread.start()
-            thread2.start()
-            thread3.start()
-        else:
-            print('디아블로가 실행되어 있지 않습니다.')
+        for monitor in self.__onMonitors:
+
+            if monitor == 'first':
+                thread = threading.Thread(target=self.EachFirstWindow, args=(roomName,))
+                thread.daemon = True
+                thread.start()
+            if monitor == 'second':
+                thread2 = threading.Thread(target=self.EachSecondWindow, args=(roomName2,))
+                thread2.daemon = True
+                thread2.start()
+            if monitor == 'third':
+                thread3 = threading.Thread(target=self.EachThirdWindow, args=(roomName3,))
+                thread3.daemon = True
+                thread3.start()

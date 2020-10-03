@@ -16,7 +16,7 @@ class Hotkey:
     def handleRelease(self, key):
         keyClick = str(key)
         if key == Key.f9:
-            self.jewelry.jewelryCombineMain3()
+            self.jewelry.jewelryCombineMain2()
         if key == Key.f10:
             self.room.TogetherMain()
         if key == Key.f11:
